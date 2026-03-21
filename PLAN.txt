@@ -1,0 +1,163 @@
+================================================================
+  PLAN PRACY — Backend + Lokalna Baza Danych
+  Projekt: Rzeczy z Drugiej Ręki (wymien-i-kup.html)
+  Data: 2026-03-19
+================================================================
+
+ANALIZA STANU WYJŚCIOWEGO
+--------------------------
+- Aplikacja: single-file SPA (wymien-i-kup.html, ~2200 linii)
+- Dane: hardcoded tablica PRODS[] (8 produktów)
+- Baza: brak
+- Backend: brak
+- Płatności: symulowane (mock)
+- Czat: mock auto-odpowiedzi
+- Auth: brak (tylko UI logowania/rejestracji bez logiki)
+
+WYBRANY STOS TECHNOLOGICZNY
+-----------------------------
+- Runtime:   Python 3.9 (dostępny natywnie na macOS)
+- Backend:   Flask 3.1 (zainstalowany przez pip)
+- Baza:      SQLite (wbudowany w Python, plik: backend/rzeczy.db)
+- CORS:      flask-cors 6.0
+- Auth:      Flask sessions + werkzeug.security (pbkdf2:sha256)
+- Frontend:  istniejący HTML z fetch() do http://localhost:5000/api/
+
+UWAGA — pbkdf2 zamiast scrypt:
+  Python 3.9 z CommandLineTools nie posiada hashlib.scrypt.
+  Używamy pbkdf2:sha256 — bezpieczne, w pełni obsługiwane.
+
+STRUKTURA PLIKÓW
+-----------------
+claude-projekty/
+├── wymien-i-kup.html     [ZMODYFIKOWANY — warstwa API]
+├── PLAN.txt              [ten plik]
+├── start.sh              [skrypt startowy — ./start.sh]
+├── CLAUDE.md
+└── backend/
+    ├── app.py            [główna aplikacja Flask]
+    ├── db.py             [inicjalizacja SQLite]
+    ├── seed.py           [dane startowe — 8 produktów]
+    ├── rzeczy.db         [baza danych SQLite]
+    └── routes/
+        ├── auth.py       [rejestracja, logowanie, /me]
+        ├── products.py   [CRUD produktów, ulubione]
+        ├── orders.py     [zamówienia]
+        └── messages.py   [czat]
+
+SCHEMAT BAZY DANYCH
+--------------------
+  users      — id, username, email, password_hash, avatar, created_at
+  products   — id, name, brand, price, size, condition, emoji,
+               description, seller_id, is_sold, created_at
+  favorites  — user_id, product_id (PK złożony)
+  orders     — id, product_id, buyer_id, seller_id, amount,
+               platform_fee, seller_amount, payment_method,
+               status, created_at
+  messages   — id, from_user_id, to_user_id, product_id,
+               content, created_at
+
+ENDPOINTY API (wszystkie: http://localhost:5000)
+-------------------------------------------------
+  GET  /api/health                 — healthcheck
+  GET  /api/products               — lista (?q=, ?sort=, ?page=)
+  GET  /api/products/<id>          — szczegóły produktu
+  POST /api/products               — dodaj produkt (auth)
+  POST /api/products/<id>/favorite — toggle ulubione (auth)
+  GET  /api/products/favorites     — moje ulubione (auth)
+  POST /api/auth/register          — rejestracja
+  POST /api/auth/login             — logowanie
+  POST /api/auth/logout            — wylogowanie
+  GET  /api/auth/me                — aktualny użytkownik
+  POST /api/orders                 — złóż zamówienie (auth)
+  GET  /api/orders/<id>            — szczegóły zamówienia (auth)
+  GET  /api/orders/my              — moje zamówienia (auth)
+  GET  /api/messages/<product_id>  — historia czatu (auth)
+  POST /api/messages               — wyślij wiadomość (auth)
+
+INTEGRACJA FRONTENDU
+---------------------
+  - Warstwa API działa w trybie "progresywnym":
+    * Backend OFFLINE → aplikacja działa jak dotychczas (PRODS[])
+    * Backend ONLINE  → PRODS[] zastąpiony danymi z bazy,
+      logowanie/rejestracja, czat i zamówienia trafiają do API
+  - Zmienione buttony:
+    * "Zaloguj się"         → doLogin()
+    * "Utwórz konto"        → doRegister()
+    * "Opublikuj ogłoszenie"→ doSell()
+    * "Potwierdź BLIK"      → confirmBlik() → POST /api/orders
+    * sendMsg()             → POST /api/messages (z auto-reply z bazy)
+
+DANE TESTOWE
+-------------
+  8 sprzedawców i 8 produktów załadowanych do bazy.
+  Hasło każdego testowego konta: haslo123
+  Loginy: asia_modowa, karolinka_sz, marta_fashion, joanna_styl,
+          zuzia_vintage, paulina_looks, ela_glam, natka_chic
+
+ETAPY PRACY — STATUS
+---------------------
+[ETAP 1] STRUKTURA PROJEKTU ............... [✓] ZAKOŃCZONY
+[ETAP 2] SCHEMAT BAZY DANYCH .............. [✓] ZAKOŃCZONY
+[ETAP 3] ENDPOINTY API .................... [✓] ZAKOŃCZONY
+[ETAP 4] SEED DANYCH ...................... [✓] ZAKOŃCZONY
+[ETAP 5] INTEGRACJA FRONTENDU ............. [✓] ZAKOŃCZONY
+[ETAP 6] WERYFIKACJA I AUDYT .............. [✓] ZAKOŃCZONY
+
+WYNIKI AUDYTU
+--------------
+  ✓ SQL injection — wszystkie zapytania używają parametryzowanych
+    placeholders (?, nie f-string/format)
+  ✓ XSS — esc() w HTML; API zwraca JSON (nie HTML)
+  ✓ CORS — dozwolone tylko localhost:5000 i file://
+  ✓ Hasła — pbkdf2:sha256 (werkzeug), nigdy plaintext
+  ✓ Autoryzacja — endpointy modyfikujące wymagają session.user_id
+  ✓ Własny produkt — nie można kupić swojego ogłoszenia
+  ✓ Produkt sprzedany — nie można zamówić is_sold=1
+  ✓ Foreign keys — PRAGMA foreign_keys = ON
+
+WYMAGANA UWAGA UŻYTKOWNIKA
+---------------------------
+  1. secret_key w app.py: os.urandom(32) — po każdym restarcie
+     serwera sesje są invalidowane (użytkownicy muszą się ponownie
+     zalogować). W produkcji ustaw stały klucz z os.environ.
+     → Zmień w app.py: app.secret_key = 'twoj-staly-sekretny-klucz'
+
+  2. Upload zdjęć nie jest zaimplementowany (backend nie obsługuje
+     plików multipart). Przycisk w "Sprzedaj" nadal pokazuje demo.
+     → Wymaga dodania endpointu POST /api/upload i obsługi storage.
+
+  3. Płatności Stripe (karta, Google Pay, Apple Pay) nadal wskazują
+     na https://stripe.com — to wymaga integracji Stripe API (klucze).
+     Tylko BLIK (mock) jest podłączony do lokalnych zamówień.
+
+URUCHOMIENIE
+-------------
+  cd /Users/macbook/Desktop/claude-projekty
+  ./start.sh
+
+  Następnie otwórz wymien-i-kup.html w przeglądarce.
+
+================================================================
+Logi zmian:
+  2026-03-19 17:00  Analiza kodu — DONE
+  2026-03-19 17:05  Wybór stosu — DONE (Python/Flask/SQLite)
+  2026-03-19 17:10  pip install flask flask-cors — DONE
+  2026-03-19 17:15  Etap 1: struktura katalogów — DONE
+  2026-03-19 17:20  Etap 2: db.py — schemat bazy — DONE
+  2026-03-19 17:25  Etap 3: routes/auth.py — DONE
+  2026-03-19 17:28  Etap 3: routes/products.py — DONE
+  2026-03-19 17:30  Etap 3: routes/orders.py — DONE
+  2026-03-19 17:32  Etap 3: routes/messages.py — DONE
+  2026-03-19 17:33  Etap 3: app.py — DONE
+  2026-03-19 17:35  Etap 3: start.sh — DONE
+  2026-03-19 17:38  Etap 4: seed.py — DONE
+  2026-03-19 17:40  Fix: pbkdf2 zamiast scrypt (Python 3.9) — DONE
+  2026-03-19 17:42  Etap 4: seed run OK (8 prod, 8 users) — DONE
+  2026-03-19 17:45  Etap 5: integracja HTML — API layer — DONE
+  2026-03-19 17:50  Etap 5: formularze auth/sell z ID — DONE
+  2026-03-19 17:52  Etap 5: confirmBlik() → API — DONE
+  2026-03-19 17:53  Etap 5: sendMsg() → API — DONE
+  2026-03-19 17:55  Etap 6: testy Flask test_client — PASS
+  2026-03-19 17:57  Reset bazy do czystego stanu — DONE
+================================================================

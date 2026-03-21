@@ -1,0 +1,174 @@
+"""
+app.py — aplikacja Flask (lokalnie + produkcja)
+Lokalnie:    python3 app.py
+Produkcja:   gunicorn -c gunicorn.conf.py app:app
+"""
+import os
+import sys
+import logging
+from flask import Flask, jsonify, send_file, request, session
+from flask_cors import CORS
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+from dotenv import load_dotenv
+
+# ── Wczytaj .env ─────────────────────────────────────────────────
+load_dotenv(os.path.join(os.path.dirname(__file__), ".env"))
+
+# ── Konfiguracja ─────────────────────────────────────────────────
+ENV        = os.environ.get("FLASK_ENV", "development")
+SECRET_KEY = os.environ.get("SECRET_KEY")
+PORT       = int(os.environ.get("PORT", 8080))
+IS_PROD    = ENV == "production"
+
+if not SECRET_KEY:
+    if IS_PROD:
+        raise RuntimeError("SECRET_KEY nie jest ustawiony! Uzupełnij plik .env")
+    SECRET_KEY = "dev-only-insecure-key-change-me"
+
+ALLOWED_ORIGINS = [o.strip() for o in os.environ.get("ALLOWED_ORIGINS", "http://localhost:8080").split(",")]
+
+# ── Importy blueprintów ──────────────────────────────────────────
+from db import init_db
+from routes.auth      import auth_bp
+from routes.products  import products_bp
+from routes.orders    import orders_bp
+from routes.messages  import messages_bp
+from routes.upload    import upload_bp
+from routes.favorites import favorites_bp
+from routes.contact   import contact_bp
+from routes.admin     import admin_bp
+from routes.reports   import reports_bp
+from routes.reviews   import reviews_bp
+from routes.payments  import payments_bp
+from routes.shipping  import shipping_bp
+
+# ── Aplikacja ─────────────────────────────────────────────────────
+app = Flask(__name__)
+app.secret_key        = SECRET_KEY
+app.config["ENV"]     = ENV
+app.config["DEBUG"]   = not IS_PROD
+
+# Bezpieczne ciasteczka sesji w produkcji
+app.config["SESSION_COOKIE_HTTPONLY"] = True
+app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+app.config["SESSION_COOKIE_SECURE"]   = IS_PROD  # True tylko przy HTTPS
+app.config["PERMANENT_SESSION_LIFETIME"] = 60 * 60 * 24 * 30  # 30 dni
+app.config["MAX_CONTENT_LENGTH"] = 10 * 1024 * 1024  # 10 MB max body
+
+# ── CORS ─────────────────────────────────────────────────────────
+CORS(app, supports_credentials=True, origins=ALLOWED_ORIGINS)
+
+# ── Rate limiting ─────────────────────────────────────────────────
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=["200 per minute"],
+    storage_uri="memory://",
+)
+
+# Ostrzejsze limity na auth i kontakt
+limiter.limit("10 per minute")(auth_bp)
+limiter.limit("5 per minute")(contact_bp)
+
+# ── Blueprinty ────────────────────────────────────────────────────
+app.register_blueprint(auth_bp)
+app.register_blueprint(products_bp)
+app.register_blueprint(orders_bp)
+app.register_blueprint(messages_bp)
+app.register_blueprint(upload_bp)
+app.register_blueprint(favorites_bp)
+app.register_blueprint(contact_bp)
+app.register_blueprint(admin_bp)
+app.register_blueprint(reports_bp)
+app.register_blueprint(reviews_bp)
+app.register_blueprint(payments_bp)
+app.register_blueprint(shipping_bp)
+
+# Surowszy rate limit na logowanie
+limiter.limit("10 per 15 minutes")(app.view_functions["auth.login"])
+
+# ── Frontend HTML ─────────────────────────────────────────────────
+HTML_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "wymien-i-kup.html")
+
+@app.get("/")
+def frontend():
+    return send_file(HTML_PATH)
+
+# ── Security headers ──────────────────────────────────────────────
+@app.after_request
+def security_headers(resp):
+    resp.headers["X-Content-Type-Options"] = "nosniff"
+    resp.headers["X-Frame-Options"]        = "DENY"
+    resp.headers["X-XSS-Protection"]       = "1; mode=block"
+    resp.headers["Referrer-Policy"]        = "strict-origin-when-cross-origin"
+    resp.headers["Content-Security-Policy"] = (
+        "default-src 'self'; "
+        "script-src 'self' 'unsafe-inline' https://js.stripe.com https://plausible.io; "
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+        "font-src 'self' https://fonts.gstatic.com; "
+        "img-src 'self' data: blob: https://images.unsplash.com; "
+        "connect-src 'self' https://api.stripe.com https://plausible.io; "
+        "frame-src https://js.stripe.com https://hooks.stripe.com; "
+        "frame-ancestors 'none';"
+    )
+    if IS_PROD:
+        resp.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+    return resp
+
+# ── CSRF token ────────────────────────────────────────────────────
+from routes.csrf import generate_csrf
+
+@app.get("/api/csrf")
+def csrf_token():
+    return jsonify({"csrf": generate_csrf()})
+
+# ── Healthcheck ───────────────────────────────────────────────────
+@app.get("/api/health")
+def health():
+    return jsonify({"status": "ok", "env": ENV, "app": "Rzeczy z Drugiej Ręki"})
+
+# ── Obsługa błędów ────────────────────────────────────────────────
+@app.errorhandler(404)
+def not_found(e):
+    return jsonify({"error": "Nie znaleziono zasobu."}), 404
+
+@app.errorhandler(405)
+def method_not_allowed(e):
+    return jsonify({"error": "Niedozwolona metoda HTTP."}), 405
+
+@app.errorhandler(429)
+def rate_limit(e):
+    return jsonify({"error": "Zbyt wiele żądań. Poczekaj chwilę."}), 429
+
+@app.errorhandler(500)
+def server_error(e):
+    app.logger.error(f"500 error: {e}")
+    return jsonify({"error": "Wewnętrzny błąd serwera."}), 500
+
+# ── Logging (produkcja) ───────────────────────────────────────────
+if IS_PROD:
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s %(levelname)s %(message)s",
+        handlers=[
+            logging.FileHandler(os.path.join(os.path.dirname(__file__), "app.log")),
+            logging.StreamHandler(),
+        ]
+    )
+
+# ── Start ─────────────────────────────────────────────────────────
+if __name__ == "__main__":
+    init_db()
+    try:
+        from seed import seed
+        seed()
+    except Exception as ex:
+        print(f"[warn] Seed: {ex}")
+
+    print(f"\n{'='*52}")
+    print(f"  Rzeczy z Drugiej Ręki — {'PRODUKCJA' if IS_PROD else 'DEVELOPMENT'}")
+    print(f"  http://localhost:{PORT}/")
+    print(f"{'='*52}\n")
+
+    app.run(host="0.0.0.0", port=PORT, debug=not IS_PROD, use_reloader=not IS_PROD)

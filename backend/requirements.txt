@@ -1,0 +1,19 @@
+# Rzeczy z Drugiej Ręki — zależności Pythona
+# Instalacja: pip3 install -r requirements.txt
+
+# Framework
+flask==3.1.3
+flask-cors==6.0.2
+flask-limiter==3.11.0
+
+# Bezpieczeństwo
+werkzeug==3.1.6
+
+# Konfiguracja
+python-dotenv==1.2.1
+
+# Serwer produkcyjny
+gunicorn==21.2.0
+
+# Opcjonalnie — PostgreSQL (odkomentuj na serwerze)
+# psycopg2-binary==2.9.9
