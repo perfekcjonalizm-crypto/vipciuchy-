@@ -9,8 +9,8 @@ from email.mime.text import MIMEText
 
 log = logging.getLogger(__name__)
 
-IS_PROD  = os.environ.get("FLASK_ENV") == "production"
-DEV_MODE = not IS_PROD  # jeśli True — kody w logu zamiast wysyłki
+IS_PROD  = os.environ.get("FLASK_ENV", "").strip() == "production"
+DEV_MODE = not (IS_PROD and bool(os.environ.get("SMTP_HOST", "")))
 
 # ── SMTP ──────────────────────────────────────────────────────────
 SMTP_HOST = os.environ.get("SMTP_HOST", "")
@@ -27,13 +27,14 @@ TWILIO_FROM = os.environ.get("TWILIO_FROM_NUMBER", "")
 
 def send_email_code(to_email: str, code: str) -> bool:
     """Wysyła kod weryfikacyjny na e-mail. Zwraca True jeśli sukces."""
-    subject = "Kod weryfikacyjny — rzeczy.pl"
+    subject = "Kod weryfikacyjny — VipCiuchy"
     body = (
         f"Witaj!\n\n"
-        f"Twój kod weryfikacyjny: {code}\n\n"
+        f"Twój kod weryfikacyjny VipCiuchy: {code}\n\n"
         f"Kod ważny przez 30 minut.\n"
         f"Jeśli to nie Ty — zignoruj tę wiadomość.\n\n"
-        f"rzeczy.pl"
+        f"Zespół VipCiuchy\n"
+        f"vipciuchy.pl"
     )
 
     if DEV_MODE or not SMTP_HOST:

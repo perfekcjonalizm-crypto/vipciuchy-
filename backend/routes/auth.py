@@ -84,22 +84,17 @@ def register():
         user = conn.execute("SELECT * FROM users WHERE username=?", (username,)).fetchone()
         uid  = user["id"]
 
-        # Generuj kody
+        # Generuj kod email (SMS usunięty — weryfikacja tylko przez email)
         email_code = _gen_code()
-        phone_code = _gen_code()
         _save_code(conn, uid, "email", email_code)
-        _save_code(conn, uid, "phone", phone_code)
         conn.commit()
 
-        # Wyślij (lub zaloguj w trybie DEV)
-        from notifier import send_email_code, send_sms_code
+        from notifier import send_email_code
         send_email_code(email, email_code)
-        send_sms_code(phone, phone_code)
 
         response = {"pending_verification": True, "user_id": uid}
         if IS_DEV:
             response["_dev_email_code"] = email_code
-            response["_dev_phone_code"] = phone_code
 
         return jsonify(response), 201
 
@@ -113,35 +108,28 @@ def register():
 
 @auth_bp.post("/verify")
 def verify():
-    """Weryfikacja e-mail + telefonu po rejestracji."""
+    """Weryfikacja e-mail po rejestracji (SMS usunięty)."""
     data       = request.get_json(silent=True) or {}
     user_id    = data.get("user_id")
     email_code = (data.get("email_code") or "").strip()
-    phone_code = (data.get("phone_code") or "").strip()
 
-    if not user_id or not email_code or not phone_code:
-        return jsonify({"error": "Podaj oba kody weryfikacyjne."}), 400
+    if not user_id or not email_code:
+        return jsonify({"error": "Podaj kod weryfikacyjny."}), 400
 
     now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     conn = get_db()
     try:
-        errors = []
-        for code_type, code_val in [("email", email_code), ("phone", phone_code)]:
-            row = conn.execute(
-                "SELECT * FROM verification_tokens WHERE user_id=? AND type=? AND used=0 AND expires_at > ?",
-                (user_id, code_type, now)
-            ).fetchone()
-            if not row:
-                errors.append(f"Kod {code_type} wygasł lub jest nieprawidłowy.")
-            elif not hmac.compare_digest(row["code"], code_val):
-                errors.append(f"Błędny kod {code_type}.")
+        row = conn.execute(
+            "SELECT * FROM verification_tokens WHERE user_id=? AND type='email' AND used=0 AND expires_at > ?",
+            (user_id, now)
+        ).fetchone()
+        if not row:
+            return jsonify({"error": "Kod wygasł lub jest nieprawidłowy."}), 400
+        if not hmac.compare_digest(row["code"], email_code):
+            return jsonify({"error": "Błędny kod weryfikacyjny."}), 400
 
-        if errors:
-            return jsonify({"error": " ".join(errors)}), 400
-
-        # Oznacz tokeny jako użyte i aktywuj konto
+        # Aktywuj konto
         conn.execute("UPDATE verification_tokens SET used=1 WHERE user_id=? AND type='email'", (user_id,))
-        conn.execute("UPDATE verification_tokens SET used=1 WHERE user_id=? AND type='phone'", (user_id,))
         conn.execute(
             "UPDATE users SET email_verified=1, phone_verified=1, is_active=1 WHERE id=?",
             (user_id,)

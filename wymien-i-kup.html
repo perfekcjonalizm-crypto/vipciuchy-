@@ -2787,8 +2787,8 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 <div id="page-weryfikacja" class="subpage">
   <div class="sp-header">
     <div class="sp-eyebrow">Weryfikacja konta</div>
-    <h1>Potwierdź e-mail i telefon</h1>
-    <p>Wysłaliśmy kody na Twój e-mail i telefon. Wpisz oba poniżej.</p>
+    <h1>Potwierdź adres e-mail</h1>
+    <p>Wysłaliśmy 6-cyfrowy kod na Twój adres e-mail. Sprawdź skrzynkę (i folder SPAM).</p>
   </div>
   <div class="sp-body" style="max-width:440px">
     <div class="sp-card">
@@ -2798,19 +2798,10 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
                style="font-size:1.4rem;letter-spacing:.2em;text-align:center"
                onkeydown="if(event.key==='Enter')doVerify()" oninput="this.value=this.value.replace(/\D/g,'')">
       </div>
-      <div class="fgrp">
-        <label>📱 Kod z SMS (6 cyfr)</label>
-        <input id="v-phone-code" type="text" maxlength="6" placeholder="123456"
-               style="font-size:1.4rem;letter-spacing:.2em;text-align:center"
-               onkeydown="if(event.key==='Enter')doVerify()" oninput="this.value=this.value.replace(/\D/g,'')">
-      </div>
       <button type="button" class="btn-submit" onclick="doVerify()">Zweryfikuj i zaloguj się</button>
       <p class="form-note" style="margin-top:14px">
         Nie dostałeś kodu? <a onclick="doResend()" style="cursor:pointer;color:var(--teal)">Wyślij ponownie</a>
       </p>
-      <div id="v-dev-hint" style="display:none;margin-top:16px;padding:12px;background:var(--amber-l);border-radius:8px;font-size:.8rem;border:1px solid var(--amber)">
-        <strong>🛠 Tryb DEV</strong> — kody zostaną wypełnione automatycznie
-      </div>
     </div>
   </div>
 </div>
@@ -4437,13 +4428,7 @@ function doRegister() {
       setButtonLoading(btn, false);
       if (data.error) { showToast('Błąd: ' + data.error); return; }
       _pendingUserId = data.user_id;
-      // Tryb DEV — wypełnij kody automatycznie
-      if (data._dev_email_code) {
-        document.getElementById('v-email-code').value = data._dev_email_code;
-        document.getElementById('v-phone-code').value = data._dev_phone_code;
-        document.getElementById('v-dev-hint').style.display = 'block';
-      }
-      showToast('Kody wysłane! Sprawdź e-mail i SMS.');
+      showToast('Kod wysłany! Sprawdź e-mail (też folder SPAM).');
       goTo('weryfikacja');
     })
     .catch(function() { setButtonLoading(btn, false); showToast('Nie można połączyć się z serwerem.'); });
@@ -4452,10 +4437,9 @@ function doRegister() {
 function doVerify() {
   if (!_pendingUserId) { showToast('Brak sesji weryfikacji — zarejestruj się ponownie.'); return; }
   var emailCode = (document.getElementById('v-email-code').value || '').trim();
-  var phoneCode = (document.getElementById('v-phone-code').value || '').trim();
-  if (!emailCode || !phoneCode) { showToast('Wpisz oba kody'); return; }
-  if (!/^\d{6}$/.test(emailCode) || !/^\d{6}$/.test(phoneCode)) { showToast('Kody muszą mieć dokładnie 6 cyfr'); return; }
-  apiFetch('/api/auth/verify', { method: 'POST', body: JSON.stringify({ user_id: _pendingUserId, email_code: emailCode, phone_code: phoneCode }) })
+  if (!emailCode) { showToast('Wpisz kod z e-maila'); return; }
+  if (!/^\d{6}$/.test(emailCode)) { showToast('Kod musi mieć dokładnie 6 cyfr'); return; }
+  apiFetch('/api/auth/verify', { method: 'POST', body: JSON.stringify({ user_id: _pendingUserId, email_code: emailCode }) })
     .then(function(r) { return r.json(); })
     .then(function(data) {
       if (data.error) { showToast('Błąd: ' + data.error); return; }
@@ -4475,11 +4459,7 @@ function doResend() {
     .then(function(r) { return r.json(); })
     .then(function(data) {
       if (data.error) { showToast('Błąd: ' + data.error); return; }
-      if (data._dev_email_code) {
-        document.getElementById('v-email-code').value = data._dev_email_code;
-        document.getElementById('v-phone-code').value = data._dev_phone_code;
-      }
-      showToast('Kody wysłane ponownie!');
+      showToast('Kod wysłany ponownie! Sprawdź e-mail.');
     })
     .catch(function() { showToast('Nie można połączyć się z serwerem.'); });
 }
