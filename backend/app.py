@@ -26,7 +26,7 @@ if not SECRET_KEY:
         raise RuntimeError("SECRET_KEY nie jest ustawiony! Uzupełnij plik .env")
     SECRET_KEY = "dev-only-insecure-key-change-me"
 
-ALLOWED_ORIGINS = [o.strip() for o in os.environ.get("ALLOWED_ORIGINS", "http://localhost:8080").split(",")]
+ALLOWED_ORIGINS = [o.strip() for o in os.environ.get("ALLOWED_ORIGINS", "http://localhost:8080,http://localhost:5500,http://127.0.0.1:8080").split(",") if o.strip()]
 
 # ── Importy blueprintów ──────────────────────────────────────────
 from db import init_db
@@ -57,7 +57,11 @@ app.config["PERMANENT_SESSION_LIFETIME"] = 60 * 60 * 24 * 30  # 30 dni
 app.config["MAX_CONTENT_LENGTH"] = 10 * 1024 * 1024  # 10 MB max body
 
 # ── CORS ─────────────────────────────────────────────────────────
-CORS(app, supports_credentials=True, origins=ALLOWED_ORIGINS)
+CORS(app,
+     supports_credentials=True,
+     origins=ALLOWED_ORIGINS,
+     allow_headers=["Content-Type", "X-CSRF-Token"],
+     methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"])
 
 # ── Rate limiting ─────────────────────────────────────────────────
 limiter = Limiter(

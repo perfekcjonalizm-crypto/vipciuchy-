@@ -4394,7 +4394,7 @@ function esc(t) { t = t == null ? '' : String(t); return t.replace(/&/g,'&amp;')
 
 /* ══ AUTH ══════════════════════════════════════════════════════ */
 function doLogin() {
-  if (!_apiOnline) { showToast('Backend offline — uruchom ./start.sh'); return; }
+  if (!_apiOnline) { showToast('Brak połączenia z serwerem — spróbuj ponownie za chwilę'); return; }
   var username = (document.getElementById('login-user').value || '').trim();
   var password = document.getElementById('login-pass').value || '';
   if (!username || !password) { showToast('Wypełnij login i hasło'); return; }
@@ -4418,7 +4418,7 @@ function doLogin() {
 var _pendingUserId = null;
 
 function doRegister() {
-  if (!_apiOnline) { showToast('Backend offline — uruchom ./start.sh'); return; }
+  if (!_apiOnline) { showToast('Brak połączenia z serwerem — spróbuj ponownie za chwilę'); return; }
   var username = (document.getElementById('reg-user').value  || '').trim();
   var email    = (document.getElementById('reg-email').value || '').trim();
   var phone    = (document.getElementById('reg-phone').value || '').trim();
@@ -4568,7 +4568,7 @@ function onFilesChosen(input) {
 
 /* ══ SPRZEDAJ ══════════════════════════════════════════════════ */
 function doSell() {
-  if (!_apiOnline) { showToast('Backend offline — uruchom ./start.sh'); return; }
+  if (!_apiOnline) { showToast('Brak połączenia z serwerem — spróbuj ponownie za chwilę'); return; }
   if (!_currentUser) { showToast('Najpierw się zaloguj!'); goTo('logowanie'); return; }
   var name  = (document.getElementById('sell-name').value  || '').trim();
   var brand = (document.getElementById('sell-brand').value || '').trim();
