@@ -15,5 +15,8 @@ python-dotenv==1.2.1
 # Serwer produkcyjny
 gunicorn==21.2.0
 
+# HTTP klient
+requests==2.32.3
+
 # Opcjonalnie — PostgreSQL (odkomentuj na serwerze)
 # psycopg2-binary==2.9.9
