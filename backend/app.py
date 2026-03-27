@@ -15,7 +15,7 @@ from dotenv import load_dotenv
 load_dotenv(os.path.join(os.path.dirname(__file__), ".env"))
 
 # ── Konfiguracja ─────────────────────────────────────────────────
-ENV        = os.environ.get("FLASK_ENV", "development")
+ENV        = os.environ.get("FLASK_ENV", "development").strip()
 SECRET_KEY = os.environ.get("SECRET_KEY")
 PORT       = int(os.environ.get("PORT", 8080))
 IS_PROD    = ENV == "production"
