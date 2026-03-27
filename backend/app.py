@@ -58,28 +58,52 @@ app.config["SESSION_COOKIE_SECURE"]   = IS_PROD  # True tylko przy HTTPS
 app.config["PERMANENT_SESSION_LIFETIME"] = 60 * 60 * 24 * 30  # 30 dni
 app.config["MAX_CONTENT_LENGTH"] = 10 * 1024 * 1024  # 10 MB max body
 
-# ── CORS — ręczne nagłówki (flask-cors 6.x ma breaking changes) ──
+# ── CORS — ręczne nagłówki ────────────────────────────────────────
+def _cors_origin() -> str:
+    """
+    Zwraca origin do użycia w nagłówkach CORS.
+    Railway/Fastly CDN może zdjąć nagłówek Origin — fallback na Referer,
+    a gdy go też brak, w trybie produkcyjnym używamy domyślnej domeny.
+    """
+    origin = request.headers.get("Origin", "").strip()
+    if not origin:
+        try:
+            from urllib.parse import urlparse
+            ref = request.headers.get("Referer", "")
+            if ref:
+                p = urlparse(ref)
+                origin = f"{p.scheme}://{p.netloc}"
+        except Exception:
+            pass
+    if not origin and IS_PROD and ALLOWED_ORIGINS:
+        origin = ALLOWED_ORIGINS[0]   # CDN zjadł Origin — bezpiecznie zakładamy główną domenę
+    return origin
+
+
+def _set_cors(headers, origin: str) -> None:
+    headers["Access-Control-Allow-Origin"]      = origin
+    headers["Access-Control-Allow-Credentials"] = "true"
+    headers["Access-Control-Allow-Headers"]     = "Content-Type, X-CSRF-Token"
+    headers["Access-Control-Allow-Methods"]     = "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+    headers["Vary"]                             = "Origin"
+
+
 @app.after_request
 def apply_cors(response):
-    origin = request.headers.get("Origin", "")
+    origin = _cors_origin()
     if origin in ALLOWED_ORIGINS:
-        response.headers["Access-Control-Allow-Origin"]      = origin
-        response.headers["Access-Control-Allow-Credentials"] = "true"
-        response.headers["Access-Control-Allow-Headers"]     = "Content-Type, X-CSRF-Token"
-        response.headers["Access-Control-Allow-Methods"]     = "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+        _set_cors(response.headers, origin)
     return response
+
 
 @app.before_request
 def handle_options():
     if request.method == "OPTIONS":
         from flask import Response
-        origin = request.headers.get("Origin", "")
+        origin = _cors_origin()
         resp = Response("", 204)
         if origin in ALLOWED_ORIGINS:
-            resp.headers["Access-Control-Allow-Origin"]      = origin
-            resp.headers["Access-Control-Allow-Credentials"] = "true"
-            resp.headers["Access-Control-Allow-Headers"]     = "Content-Type, X-CSRF-Token"
-            resp.headers["Access-Control-Allow-Methods"]     = "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+            _set_cors(resp.headers, origin)
         return resp
 
 # ── Rate limiting ─────────────────────────────────────────────────
