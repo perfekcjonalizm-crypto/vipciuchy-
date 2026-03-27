@@ -42,6 +42,9 @@ from routes.reviews   import reviews_bp
 from routes.payments  import payments_bp
 from routes.shipping  import shipping_bp
 
+# ── Baza danych — inicjalizuj przy każdym starcie (gunicorn + dev) ─
+init_db()
+
 # ── Aplikacja ─────────────────────────────────────────────────────
 app = Flask(__name__)
 app.secret_key        = SECRET_KEY
@@ -183,7 +186,6 @@ if IS_PROD:
 
 # ── Start ─────────────────────────────────────────────────────────
 if __name__ == "__main__":
-    init_db()
     try:
         from seed import seed
         seed()
