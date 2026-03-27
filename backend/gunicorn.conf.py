@@ -35,3 +35,15 @@ max_requests_jitter   = 100
 
 # Plik PID
 pidfile = "/tmp/gunicorn_rzeczy.pid"
+
+
+def on_starting(server):
+    """
+    Uruchamiany RAZ w procesie master, zanim workery zostaną sforkowane.
+    Inicjalizuje bazę danych — eliminuje wyścig między workerami.
+    """
+    import sys
+    import os
+    sys.path.insert(0, os.path.dirname(__file__))
+    from db import init_db
+    init_db()
