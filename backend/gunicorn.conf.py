@@ -9,13 +9,13 @@ import multiprocessing
 bind    = f"0.0.0.0:{os.environ.get('PORT', '8080')}"
 
 # Liczba workerów: 2 × CPU + 1 (standardowa formuła)
-workers = multiprocessing.cpu_count() * 2 + 1
+workers = 2
 
-# Typ workera (sync jest bezpieczny dla SQLite, gevent dla PostgreSQL)
+# Typ workera
 worker_class = "sync"
 
 # Timeout żądania (sekundy)
-timeout = 30
+timeout = 120
 
 # Keepalive
 keepalive = 5
