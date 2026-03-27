@@ -25,7 +25,12 @@ if not SECRET_KEY:
         raise RuntimeError("SECRET_KEY nie jest ustawiony! Uzupełnij plik .env")
     SECRET_KEY = "dev-only-insecure-key-change-me"
 
-ALLOWED_ORIGINS = [o.strip() for o in os.environ.get("ALLOWED_ORIGINS", "http://localhost:8080,http://localhost:5500,http://127.0.0.1:8080").split(",") if o.strip()]
+ALLOWED_ORIGINS = [o.strip() for o in os.environ.get(
+    "ALLOWED_ORIGINS",
+    "http://localhost:8080,http://localhost:5500,http://127.0.0.1:8080,"
+    "https://vipciuchy.pl,https://www.vipciuchy.pl,"
+    "https://vipciuchy-production.up.railway.app"
+).split(",") if o.strip()]
 
 # ── Importy blueprintów ──────────────────────────────────────────
 from db import init_db
@@ -169,12 +174,7 @@ from routes.csrf import generate_csrf
 
 @app.get("/api/csrf")
 def csrf_token():
-    resp = jsonify({"csrf": generate_csrf()})
-    # Hardcoded CORS test — sprawdzamy czy Fastly nie zcina nagłówków
-    resp.headers["X-Debug-Cors-Set"] = "yes"
-    resp.headers["Access-Control-Allow-Origin"] = "https://vipciuchy.pl"
-    resp.headers["Access-Control-Allow-Credentials"] = "true"
-    return resp
+    return jsonify({"csrf": generate_csrf()})
 
 # ── Healthcheck ───────────────────────────────────────────────────
 @app.get("/api/health")
