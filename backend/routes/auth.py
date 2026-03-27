@@ -12,10 +12,8 @@ from routes.csrf import csrf_required
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/api/auth")
 
-# Tryb DEV gdy brak konfiguracji SMTP/Twilio — kody widoczne w odpowiedzi API
-_has_smtp   = bool(os.environ.get("SMTP_HOST"))
-_has_twilio = bool(os.environ.get("TWILIO_ACCOUNT_SID"))
-IS_DEV = not (_has_smtp and _has_twilio)
+# Tryb DEV gdy brak konfiguracji SMTP — kody widoczne w odpowiedzi API
+IS_DEV = not bool(os.environ.get("SMTP_HOST"))
 
 
 def _user_dict(row):
