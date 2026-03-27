@@ -93,7 +93,11 @@ HTML_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "wymien-i-k
 
 @app.get("/")
 def frontend():
-    return send_file(HTML_PATH)
+    resp = send_file(HTML_PATH)
+    resp.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    resp.headers["Pragma"] = "no-cache"
+    resp.headers["Expires"] = "0"
+    return resp
 
 # ── Security headers ──────────────────────────────────────────────
 @app.after_request

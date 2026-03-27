@@ -4,22 +4,22 @@
 <meta charset="UTF-8">
 <script src="https://js.stripe.com/v3/" async></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>rzeczy.pl — Moda z Drugiej Ręki</title>
-<meta name="description" content="rzeczy.pl — polska platforma z modą z drugiej ręki. Kupuj taniej, sprzedawaj łatwiej. Ponad 4200 ubrań, butów i akcesoriów.">
-<meta property="og:title" content="rzeczy.pl — Moda z drugiej ręki">
+<title>vipciuchy.pl — Moda z Drugiej Ręki</title>
+<meta name="description" content="vipciuchy.pl — polska platforma z modą z drugiej ręki. Kupuj taniej, sprzedawaj łatwiej. Ponad 4200 ubrań, butów i akcesoriów.">
+<meta property="og:title" content="vipciuchy.pl — Moda z drugiej ręki">
 <meta property="og:description" content="Polska platforma z modą secondhand. Kupuj taniej, sprzedawaj łatwiej. Ponad 4200 ubrań, butów i akcesoriów.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=1200&q=80&auto=format&fit=crop">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:url" content="https://rzeczy.pl">
+<meta property="og:url" content="https://vipciuchy.pl">
 <meta property="og:locale" content="pl_PL">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="rzeczy.pl — Moda z drugiej ręki">
+<meta name="twitter:title" content="vipciuchy.pl — Moda z drugiej ręki">
 <meta name="twitter:description" content="Polska platforma z modą secondhand. Kupuj taniej, sprzedawaj łatwiej.">
 <meta name="twitter:image" content="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=1200&q=80&auto=format&fit=crop">
 <meta name="theme-color" content="#09b3a0">
-<link rel="canonical" href="https://rzeczy.pl">
+<link rel="canonical" href="https://vipciuchy.pl">
 
 <!-- Structured data — WebSite + Organization -->
 <script type="application/ld+json">
@@ -28,28 +28,28 @@
   "@graph": [
     {
       "@type": "WebSite",
-      "@id": "https://rzeczy.pl/#website",
-      "url": "https://rzeczy.pl",
-      "name": "rzeczy.pl",
+      "@id": "https://vipciuchy.pl/#website",
+      "url": "https://vipciuchy.pl",
+      "name": "vipciuchy.pl",
       "description": "Polska platforma z modą z drugiej ręki. Kupuj taniej, sprzedawaj łatwiej.",
       "inLanguage": "pl-PL",
       "potentialAction": {
         "@type": "SearchAction",
         "target": {
           "@type": "EntryPoint",
-          "urlTemplate": "https://rzeczy.pl/?q={search_term_string}"
+          "urlTemplate": "https://vipciuchy.pl/?q={search_term_string}"
         },
         "query-input": "required name=search_term_string"
       }
     },
     {
       "@type": "Organization",
-      "@id": "https://rzeczy.pl/#organization",
-      "name": "rzeczy.pl",
-      "url": "https://rzeczy.pl",
+      "@id": "https://vipciuchy.pl/#organization",
+      "name": "vipciuchy.pl",
+      "url": "https://vipciuchy.pl",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://rzeczy.pl/logo.png",
+        "url": "https://vipciuchy.pl/logo.png",
         "width": 512,
         "height": 512
       },
@@ -59,8 +59,8 @@
         "addressCountry": "PL"
       },
       "sameAs": [
-        "https://instagram.com/rzeczypl",
-        "https://facebook.com/rzeczypl"
+        "https://instagram.com/vipciuchy",
+        "https://facebook.com/vipciuchy"
       ]
     }
   ]
@@ -68,7 +68,7 @@
 </script>
 
 <!-- Analytics — Plausible (privacy-first, RODO-compliant, no cookies) -->
-<script defer data-domain="rzeczy.pl" src="https://plausible.io/js/script.tagged-events.js"></script>
+<script defer data-domain="vipciuchy.pl" src="https://plausible.io/js/script.tagged-events.js"></script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -232,7 +232,6 @@ nav {
   white-space: nowrap;
   display: inline-block;
   animation: ticker 30s linear infinite;
-  will-change: transform;
 }
 @keyframes ticker {
   from { transform: translateX(100vw); }
@@ -269,7 +268,6 @@ nav {
     url('https://images.unsplash.com/photo-1483985988355-763728e1935b?w=1600&q=80&auto=format&fit=crop') center/cover no-repeat;
   background-color: var(--navy);
   padding: 56px 20px 52px; position: relative; overflow: hidden;
-  contain: paint;
 }
 /* geometryczna siatka w tle */
 .hero::before {
@@ -279,14 +277,6 @@ nav {
     linear-gradient(rgba(9,179,160,.06) 1px, transparent 1px),
     linear-gradient(90deg, rgba(9,179,160,.06) 1px, transparent 1px);
   background-size: 48px 48px;
-}
-/* gradient blask po prawej */
-.hero::after {
-  content: '';
-  position: absolute; right: -100px; top: -100px;
-  width: 500px; height: 500px;
-  background: radial-gradient(circle, rgba(9,179,160,.18) 0%, transparent 65%);
-  pointer-events: none;
 }
 .hero-inner {
   max-width: 1280px; margin: 0 auto;
@@ -997,26 +987,6 @@ footer {
     linear-gradient(135deg, rgba(15,23,42,.45) 0%, rgba(26,39,68,.35) 45%, rgba(13,35,64,.35) 100%),
     url('https://images.unsplash.com/photo-1483985988355-763728e1935b?w=1600&q=80&auto=format&fit=crop') center/cover no-repeat !important;
   padding: 72px 20px 64px !important;
-}
-/* Gradient mesh blobs */
-.hero-blob-1, .hero-blob-2, .hero-blob-3 {
-  position: absolute; border-radius: 50%; pointer-events: none;
-  will-change: transform; contain: layout style;
-}
-.hero-blob-1 {
-  width: 500px; height: 500px; right: -80px; top: -80px;
-  background: radial-gradient(circle, rgba(9,179,160,.22) 0%, transparent 70%);
-
-}
-.hero-blob-2 {
-  width: 350px; height: 350px; left: 30%; bottom: -100px;
-  background: radial-gradient(circle, rgba(74,144,226,.15) 0%, transparent 70%);
-
-}
-.hero-blob-3 {
-  width: 250px; height: 250px; left: -40px; top: 40%;
-  background: radial-gradient(circle, rgba(255,107,107,.1) 0%, transparent 70%);
-
 }
 
   33%       { transform: translate(12px, -18px) scale(1.04); }
@@ -2106,12 +2076,12 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 }
 
 /* ── BOTTOM NAV ── */
-.bottom-nav { display:none; position:fixed; bottom:0; left:0; right:0; background:var(--white); border-top:1px solid var(--gray-2); z-index:100; padding:4px 0 env(safe-area-inset-bottom,0); box-shadow:0 -4px 12px rgba(0,0,0,.08); }
+.bottom-nav { display:none; position:fixed; bottom:0; left:0; right:0; background:var(--white); border-top:1px solid var(--gray-2); z-index:100; padding:4px 0 env(safe-area-inset-bottom,0); box-shadow:0 -4px 12px rgba(0,0,0,.08); align-items:center; height:calc(56px + env(safe-area-inset-bottom, 0px)); }
 @media (max-width:640px) { .bottom-nav { display:flex; } }
-.bottom-nav-btn { flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; background:none; border:none; cursor:pointer; padding:8px 4px; color:var(--gray-5); font-size:.65rem; font-weight:600; font-family:'Plus Jakarta Sans',sans-serif; }
+.bottom-nav-btn { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; background:none; border:none; cursor:pointer; padding:8px 4px; color:var(--gray-5); font-size:.65rem; font-weight:600; font-family:'Plus Jakarta Sans',sans-serif; height:100%; align-self:stretch; }
 .bottom-nav-btn span { font-size:1.3rem; line-height:1; }
 .bottom-nav-btn:hover, .bottom-nav-btn.active { color:var(--teal); }
-.bottom-nav-sell { background:var(--teal); border-radius:12px; color:white !important; margin:4px 8px; }
+.bottom-nav-sell { background:var(--teal); border-radius:12px; color:white !important; margin:4px 8px; height:auto; align-self:center; padding:6px 4px; }
 .bottom-nav-sell span { font-size:1.5rem; font-weight:900; color:white; }
 @media (max-width:640px) { #home-wrap, .subpage.active { padding-bottom:80px; } }
 
@@ -2261,7 +2231,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 <!-- ═══════════════ NAWIGACJA ═══════════════ -->
 <nav>
   <div class="nav-inner">
-    <span class="logo" onclick="goTo('home')">rzeczy<span class="dot">.</span>pl</span>
+    <span class="logo" onclick="goTo('home')">VipCiuchy</span>
     <div class="search-wrap">
       <span class="s-icon">🔍</span>
       <input type="text" aria-label="Szukaj" placeholder="Szukaj: marka, rozmiar, kategoria…" oninput="doSearch(this.value)" autocomplete="off" spellcheck="false" style="outline:none;-webkit-appearance:none;">
@@ -2364,9 +2334,6 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 
   <!-- HERO -->
   <section class="hero">
-    <div class="hero-blob-1"></div>
-    <div class="hero-blob-2"></div>
-    <div class="hero-blob-3"></div>
     <div class="hero-inner">
       <div>
         <div class="hero-eyebrow">🌿 Polska moda z drugiej ręki</div>
@@ -2559,7 +2526,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
     </div>
     <div class="foot-inner">
       <div>
-        <span class="foot-logo" onclick="goTo('home')">rzeczy<span class="dot">.</span>pl</span>
+        <span class="foot-logo" onclick="goTo('home')">VipCiuchy</span>
         <p class="foot-desc">Polska platforma z modą z drugiej ręki. Kupuj taniej, sprzedawaj łatwiej, dbaj o planetę. 🌿</p>
       </div>
       <div class="foot-col"><h4>Kup</h4><span class="foot-link" onclick="goTo('home')">Przeglądaj oferty</span><span class="foot-link" onclick="showToast('Wkrótce!')">Nowe ogłoszenia</span><span class="foot-link" onclick="showToast('Wkrótce!')">Promocje</span></div>
@@ -2567,7 +2534,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
       <div class="foot-col"><h4>Pomoc</h4><span class="foot-link" onclick="goTo('faq')">FAQ</span><span class="foot-link" onclick="goTo('kontakt')">Kontakt</span><span class="foot-link" onclick="goTo('regulamin')">Regulamin</span><span class="foot-link" onclick="goTo('prywatnosc')">Prywatność</span></div>
     </div>
     <div class="foot-bottom">
-      <span>© 2026 rzeczy.pl · Polska platforma second-hand</span>
+      <span>© 2026 vipciuchy.pl · Polska platforma second-hand</span>
       <div class="foot-socials">
         <a href="https://instagram.com" target="_blank" rel="noopener" class="social-btn" aria-label="Instagram">📸</a>
         <a href="https://facebook.com" target="_blank" rel="noopener" class="social-btn" aria-label="Facebook">📘</a>
@@ -2768,16 +2735,21 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   <div class="sp-body">
     <button type="button" class="back-btn" onclick="goTo('home')">← Strona główna</button>
     <div class="sp-card"><h2>Kupowanie</h2>
-      <div class="faq-item"><button type="button" class="faq-q" onclick="togFaq(this)">Jak kupić produkt? <span class="faq-arr">▼</span></button><div class="faq-a">Kliknij "Kup teraz" lub "Napisz" przy wybranym produkcie, żeby otworzyć czat ze sprzedającym. Ustalasz szczegóły — formę płatności (BLIK, przelew, gotówka) i sposób dostawy — bezpośrednio z nim.</div></div>
-      <div class="faq-item"><button type="button" class="faq-q" onclick="togFaq(this)">Czy moje pieniądze są bezpieczne? <span class="faq-arr">▼</span></button><div class="faq-a">Tak! Napisz do sprzedawczyni przez czat i ustal szczegóły. Możesz zapłacić BLIKiem lub przelewem bezpośrednio na jej konto. Przy odbiorze osobistym możesz też zapłacić gotówką.</div></div>
-      <div class="faq-item"><button type="button" class="faq-q" onclick="togFaq(this)">Jak wygląda płatność? <span class="faq-arr">▼</span></button><div class="faq-a">Płatność odbywa się bezpośrednio między kupującą a sprzedawczynią — tak samo jak na OLX. Możesz zapłacić BLIKiem, przelewem bankowym lub gotówką przy odbiorze osobistym. Ustalasz to z sprzedawczynią przez czat.</div></div>
-      <div class="faq-item"><button type="button" class="faq-q" onclick="togFaq(this)">Czy platforma obsługuje płatności? <span class="faq-arr">▼</span></button><div class="faq-a">Nie — platforma jest miejscem do wymiany ogłoszeń i kontaktu, jak OLX czy Sprzedajemy.pl. Transakcja finansowa przebiega bezpośrednio między Tobą a sprzedawczynią. Dlatego zawsze sprawdzaj profil i oceny sprzedawczyni przed zakupem.</div></div>
-      <div class="faq-item"><button type="button" class="faq-q" onclick="togFaq(this)">Czy mogę zwrócić produkt? <span class="faq-arr">▼</span></button><div class="faq-a">Masz 14 dni na zgłoszenie zwrotu, jeśli produkt nie odpowiada opisowi. Napisz przez czat lub na <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="abc0c4c5dfcac0dfebdcd2c6c2cec5e2c0dedb85dbc7">[email&#160;protected]</a></div></div>
+      <div class="faq-item"><button type="button" class="faq-q" onclick="togFaq(this)">Jak kupić produkt? <span class="faq-arr">▼</span></button><div class="faq-a">Kliknij "Kup teraz" przy wybranym produkcie. Zobaczysz numer telefonu sprzedającego — wyślij mu przelew BLIK bezpośrednio przez aplikację bankową (BLIK → Przelew na telefon), a następnie potwierdź w aplikacji.</div></div>
+      <div class="faq-item"><button type="button" class="faq-q" onclick="togFaq(this)">Jak działa płatność BLIK na telefon? <span class="faq-arr">▼</span></button><div class="faq-a">Otwórz aplikację swojego banku, przejdź do BLIK → "Przelew na telefon", wpisz numer sprzedającego i kwotę. To jak zwykły przelew BLIK — natychmiastowy, bezpłatny i obsługiwany przez wszystkie polskie banki. Nie potrzebujesz kodu — pieniądze trafiają bezpośrednio na konto sprzedającego.</div></div>
+      <div class="faq-item"><button type="button" class="faq-q" onclick="togFaq(this)">Czy mogę zapłacić inaczej niż BLIK? <span class="faq-arr">▼</span></button><div class="faq-a">Tak. Napisz do sprzedającego przez czat i ustalcie inną metodę — przelew bankowy, gotówka przy odbiorze osobistym lub PayPal. Platforma nie narzuca metody płatności.</div></div>
+      <div class="faq-item"><button type="button" class="faq-q" onclick="togFaq(this)">Czy platforma obsługuje płatności? <span class="faq-arr">▼</span></button><div class="faq-a">Nie — platforma łączy kupujących ze sprzedającymi, ale sama nie pośredniczy w transakcjach finansowych (jak OLX czy Sprzedajemy.pl). Pieniądze trafiają bezpośrednio do sprzedającego. Dlatego zawsze sprawdzaj profil i oceny sprzedającego.</div></div>
+      <div class="faq-item"><button type="button" class="faq-q" onclick="togFaq(this)">Ile kosztuje zakup? <span class="faq-arr">▼</span></button><div class="faq-a">Płacisz tylko cenę podaną przez sprzedającego. Platforma nie pobiera żadnej prowizji ani opłat od kupujących. Jedyny dodatkowy koszt to ewentualna wysyłka — ustalasz ją ze sprzedającym.</div></div>
+      <div class="faq-item"><button type="button" class="faq-q" onclick="togFaq(this)">Ile trwa dostawa? <span class="faq-arr">▼</span></button><div class="faq-a">Sprzedający wysyła zazwyczaj w ciągu 1–2 dni roboczych od potwierdzenia płatności. Czas dostawy zależy od wybranej metody — InPost paczkomat zwykle 1 dzień roboczy, kurier DPD 1–2 dni, Poczta Polska do 3 dni. Przy odbiorze osobistym — od razu.</div></div>
+      <div class="faq-item"><button type="button" class="faq-q" onclick="togFaq(this)">Czy mogę zwrócić produkt? <span class="faq-arr">▼</span></button><div class="faq-a">Masz 14 dni na zgłoszenie zwrotu, jeśli produkt nie odpowiada opisowi. Skontaktuj się ze sprzedającym przez czat lub napisz na kontakt@vipciuchy.pl. Zwrot środków odbywa się tą samą drogą co płatność.</div></div>
+      <div class="faq-item"><button type="button" class="faq-q" onclick="togFaq(this)">Co zrobić w przypadku sporu ze sprzedającym? <span class="faq-arr">▼</span></button><div class="faq-a">Najpierw spróbuj rozwiązać problem przez czat. Jeśli to nie pomaga, zgłoś sprawę do nas na kontakt@vipciuchy.pl — przeanalizujemy sytuację i pomożemy mediacją. Zachowaj potwierdzenia przelewu i zdjęcia produktu jako dowód.</div></div>
     </div>
     <div class="sp-card"><h2>Sprzedawanie</h2>
-      <div class="faq-item"><button type="button" class="faq-q" onclick="togFaq(this)">Ile kosztuje wystawienie ogłoszenia? <span class="faq-arr">▼</span></button><div class="faq-a">Wystawienie jest całkowicie bezpłatne i bez żadnej prowizji! Platforma utrzymuje się z reklam.</div></div>
-      <div class="faq-item"><button type="button" class="faq-q" onclick="togFaq(this)">Kiedy dostanę pieniądze? <span class="faq-arr">▼</span></button><div class="faq-a">Do 5 dni roboczych od potwierdzenia odbioru przez kupującego.</div></div>
-      <div class="faq-item"><button type="button" class="faq-q" onclick="togFaq(this)">Jak zrobić dobre zdjęcia produktu? <span class="faq-arr">▼</span></button><div class="faq-a">Fotografuj przy naturalnym świetle, na jasnym tle. Pokaż produkt z przodu, tyłu i zbliżenie metki. Dobre zdjęcia sprzedają się szybciej!</div></div>
+      <div class="faq-item"><button type="button" class="faq-q" onclick="togFaq(this)">Ile kosztuje wystawienie ogłoszenia? <span class="faq-arr">▼</span></button><div class="faq-a">Wystawienie jest całkowicie bezpłatne i bez prowizji. Platforma utrzymuje się z opcjonalnych wyróżnień ogłoszeń — nigdy nie płacisz od sprzedaży.</div></div>
+      <div class="faq-item"><button type="button" class="faq-q" onclick="togFaq(this)">Kiedy dostanę pieniądze? <span class="faq-arr">▼</span></button><div class="faq-a">Natychmiast po otrzymaniu przelewu BLIK — pieniądze trafiają bezpośrednio na Twoje konto bankowe, bez żadnego pośrednika i oczekiwania.</div></div>
+      <div class="faq-item"><button type="button" class="faq-q" onclick="togFaq(this)">Jak zrobić dobre zdjęcia produktu? <span class="faq-arr">▼</span></button><div class="faq-a">Fotografuj przy naturalnym świetle na jasnym tle. Pokaż produkt z przodu, tyłu i detale (szwy, metka, ewentualne ślady użytkowania). Ogłoszenia ze zdjęciami sprzedają się 3× szybciej!</div></div>
+      <div class="faq-item"><button type="button" class="faq-q" onclick="togFaq(this)">Jak ustalić cenę produktu? <span class="faq-arr">▼</span></button><div class="faq-a">Sprawdź podobne produkty na platformie i porównaj ceny. Ogólna zasada: nowe z metką — 50–70% ceny sklepowej, dobry stan — 30–50%, używane — 15–30%. Zawsze możesz negocjować przez czat.</div></div>
+      <div class="faq-item"><button type="button" class="faq-q" onclick="togFaq(this)">Jakie są koszty wysyłki? <span class="faq-arr">▼</span></button><div class="faq-a">Koszty wysyłki ustalasz samodzielnie i podajesz w ogłoszeniu lub w czacie. Orientacyjne ceny: InPost paczkomat — od 9,99 zł, kurier DPD — od 12,99 zł, Poczta Polska — od 14 zł. Możesz też oferować odbiór osobisty za darmo.</div></div>
     </div>
   </div>
 </div>
@@ -2790,8 +2762,8 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
     <div class="contact-grid">
       <div class="contact-tile" onclick="window.location='mailto:r.derkowski@wp.pl'" style="cursor:pointer"><div class="ct-icon">📧</div><div class="ct-title">E-mail</div><div class="ct-val">r.derkowski@wp.pl</div></div>
       <div class="contact-tile"><div class="ct-icon">⚡</div><div class="ct-title">Czas odpowiedzi</div><div class="ct-val">Do 24 godzin</div></div>
-      <div class="contact-tile"><div class="ct-icon">📸</div><div class="ct-title">Instagram</div><div class="ct-val">@rzeczy</div></div>
-      <div class="contact-tile"><div class="ct-icon">📘</div><div class="ct-title">Facebook</div><div class="ct-val">fb.com/rzeczy</div></div>
+      <div class="contact-tile"><div class="ct-icon">📸</div><div class="ct-title">Instagram</div><div class="ct-val">@vipciuchy</div></div>
+      <div class="contact-tile"><div class="ct-icon">📘</div><div class="ct-title">Facebook</div><div class="ct-val">fb.com/vipciuchy</div></div>
     </div>
     <div class="sp-card"><h2>Napisz do nas</h2>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div class="fgrp"><label>Imię</label><input id="contact-name" type="text" placeholder="Karolina"></div><div class="fgrp"><label>E-mail</label><input id="contact-email" type="email" placeholder="adres@example.pl"></div></div>
@@ -2849,11 +2821,11 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   <div class="reg-body">
     <button type="button" class="back-btn" onclick="goTo('home')">← Strona główna</button>
     <div class="sp-card">
-      <div class="reg-note">Regulamin określa zasady korzystania z platformy Rzeczy z Drugiej Ręki. Prosimy o zapoznanie się z treścią przed rejestracją.</div>
+      <div class="reg-note">Regulamin określa zasady korzystania z platformy VipCiuchy. Prosimy o zapoznanie się z treścią przed rejestracją.</div>
 
       <div class="reg-h1">§ 1. Definicje</div>
       <ul class="reg-ul">
-        <li><strong>Serwis / Platforma</strong> – serwis internetowy rzeczy.pl, umożliwiający Użytkownikom zawieranie umów sprzedaży odzieży, obuwia i akcesoriów.</li>
+        <li><strong>Serwis / Platforma</strong> – serwis internetowy vipciuchy.pl, umożliwiający Użytkownikom zawieranie umów sprzedaży odzieży, obuwia i akcesoriów.</li>
         <li><strong>Operator / Administrator</strong> – Rafał Derkowski, zam.: ul. Głowackiego 1a/4, 05-071 Sulejówek, e-mail: r.derkowski@wp.pl.</li>
         <li><strong>Użytkownik</strong> – każda pełnoletnia osoba fizyczna korzystająca z Serwisu po akceptacji Regulaminu.</li>
         <li><strong>Sprzedający Prywatny (C2C)</strong> – osoba fizyczna nieprowadząca działalności, sprzedająca prywatne rzeczy.</li>
@@ -2921,11 +2893,11 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
       <div class="reg-h2">7.2. Dostępne metody płatności</div>
       <p class="reg-para">Strony transakcji ustalają między sobą preferowaną metodę płatności. Popularne metody: BLIK (kod z aplikacji bankowej), przelew bankowy, gotówka przy odbiorze osobistym, PayPal. Platforma nie narzuca metody płatności.</p>
       <div class="reg-h2">7.3. Prowizja platformy</div>
-      <p class="reg-para">Operator pobiera opłatę prowizyjną od Sprzedającego za korzystanie z funkcji wyróżnienia ogłoszeń lub za dostęp do dodatkowych funkcji konta Premium. Opłaty te nie są związane z wartością transakcji między Użytkownikami. Szczegóły: rzeczy.pl/cennik.</p>
+      <p class="reg-para">Operator pobiera opłatę prowizyjną od Sprzedającego za korzystanie z funkcji wyróżnienia ogłoszeń lub za dostęp do dodatkowych funkcji konta Premium. Opłaty te nie są związane z wartością transakcji między Użytkownikami. Szczegóły: vipciuchy.pl/cennik.</p>
       <div class="reg-h2">7.4. Odpowiedzialność za transakcje</div>
       <p class="reg-para">Operator nie ponosi odpowiedzialności za przebieg transakcji finansowych między Użytkownikami. Zalecamy: weryfikację profilu i ocen sprzedawcy, wybór odbioru osobistego przy pierwszej transakcji, zachowanie potwierdzenia przelewu lub kodu BLIK.</p>
       <div class="reg-h1">§ 8. Ochrona danych osobowych (RODO)</div>
-      <div class="reg-note">Pełna Polityka Prywatności: rzeczy.pl/prywatnosc</div>
+      <div class="reg-note">Pełna Polityka Prywatności: vipciuchy.pl/prywatnosc</div>
       <p class="reg-para">Administrator: Operator (§1). Podstawy przetwarzania: art. 6 lit. b (realizacja umowy), c (obowiązki prawne), f (uzasadniony interes), a (marketing – za zgodą). Retencja: dane konta 5 lat; transakcyjne 5 lat podatkowych; logi 12 miesięcy.</p>
       <p class="reg-para"><strong>Prawa Użytkownika (RODO art. 15–21):</strong> dostęp, sprostowanie, usunięcie, ograniczenie, przenoszenie, sprzeciw. Kontakt: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="563d393822373d2216212f3b3f33381f3d232678263a">[email&#160;protected]</a>. Skarga do Prezesa UODO, ul. Stawki 2, 00-193 Warszawa.</p>
 
@@ -2948,7 +2920,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 
       <div class="reg-h1">§ 13. Postanowienia końcowe</div>
       <p class="reg-para">Regulamin wchodzi w życie 19.03.2026. Prawo polskie. Klauzula salwatoryjna: nieważność jednego postanowienia nie wpływa na pozostałe.</p>
-      <div class="reg-note" style="margin-top:16px">Wzór formularza odstąpienia (B2C) dostępny na stronie: rzeczy.pl/formularz-odstapienia</div>
+      <div class="reg-note" style="margin-top:16px">Wzór formularza odstąpienia (B2C) dostępny na stronie: vipciuchy.pl/formularz-odstapienia</div>
     </div>
   </div>
 </div>
@@ -3047,58 +3019,124 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
       <span class="connect-badge secure" style="background:rgba(9,179,160,.12);color:var(--teal);border-color:rgba(9,179,160,.3)">✓ Bezpieczna transakcja</span>
     </div>
 
-    <!-- ─── Jak kupić ───────────────────────────────── -->
+    <!-- ─── Wybór metody płatności ───────────────────────────────── -->
     <div class="pay-step active" id="ps-shipping">
-      <p style="font-size:.82rem;font-weight:700;color:var(--gray-5);margin-bottom:16px">
-        Jak przebiega zakup?
+      <p style="font-size:.82rem;font-weight:700;color:var(--gray-5);margin-bottom:14px">
+        Jak chcesz zapłacić?
       </p>
 
-      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px">
-        <div style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--gray-0);border-radius:var(--r-md)">
-          <span style="font-size:1.4rem;flex-shrink:0">💬</span>
-          <div>
-            <div style="font-weight:700;font-size:.9rem;color:var(--gray-6);margin-bottom:2px">1. Napisz do sprzedającego</div>
-            <div style="font-size:.8rem;color:var(--gray-4);line-height:1.5">Użyj czatu, żeby potwierdzić dostępność, ustalić szczegóły wysyłki i formę płatności.</div>
-          </div>
+      <!-- BLIK na telefon — główna opcja -->
+      <button type="button" onclick="goPayStep('blik')"
+        style="width:100%;display:flex;align-items:center;gap:14px;padding:16px;background:#fff0f0;border:2px solid #e8001c;border-radius:var(--r-md);cursor:pointer;margin-bottom:10px;transition:background .18s,box-shadow .18s;text-align:left"
+        onmouseover="this.style.background='#ffe0e0';this.style.boxShadow='0 4px 16px rgba(232,0,28,.15)'"
+        onmouseout="this.style.background='#fff0f0';this.style.boxShadow='none'">
+        <span style="font-size:1.8rem;flex-shrink:0">📱</span>
+        <div style="flex:1">
+          <div style="font-weight:800;font-size:.92rem;color:#c0001a;margin-bottom:2px">BLIK na telefon</div>
+          <div style="font-size:.77rem;color:var(--gray-4);line-height:1.4">Wyślij przelew BLIK bezpośrednio na numer sprzedającego — bez rejestracji, bez prowizji</div>
         </div>
-        <div style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--gray-0);border-radius:var(--r-md)">
-          <span style="font-size:1.4rem;flex-shrink:0">💳</span>
-          <div>
-            <div style="font-weight:700;font-size:.9rem;color:var(--gray-6);margin-bottom:2px">2. Zapłać bezpośrednio</div>
-            <div style="font-size:.8rem;color:var(--gray-4);line-height:1.5">BLIK, przelew bankowy lub gotówka przy odbiorze osobistym — ustalasz z sprzedającym.</div>
-          </div>
-        </div>
-        <div style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--gray-0);border-radius:var(--r-md)">
-          <span style="font-size:1.4rem;flex-shrink:0">📦</span>
-          <div>
-            <div style="font-weight:700;font-size:.9rem;color:var(--gray-6);margin-bottom:2px">3. Odbierz paczkę</div>
-            <div style="font-size:.8rem;color:var(--gray-4);line-height:1.5">Sprzedający wysyła w ciągu 2 dni roboczych. Możliwy odbiór osobisty.</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="escrow-box">
-        <span class="escrow-icon">💡</span>
-        <span class="escrow-text">
-          Płatność odbywa się <strong>bezpośrednio między Tobą a sprzedającym</strong> — tak jak na OLX. Platforma nie pobiera żadnej prowizji.
-        </span>
-      </div>
-
-      <button type="button" class="pay-confirm-btn" id="shipping-next-btn"
-              onclick="closePay(); goToChat(_currentProduct)" style="margin-top:16px">
-        💬 Napisz do sprzedającego →
+        <span style="font-size:.8rem;font-weight:800;color:#c0001a;flex-shrink:0">→</span>
       </button>
-      <p style="font-size:.7rem;color:var(--gray-4);text-align:center;margin-top:10px">
-        0% prowizji · Brak ukrytych opłat · Darmowe dla wszystkich
+
+      <!-- Czat jako alternatywa -->
+      <button type="button" onclick="closePay(); goToChat(_currentProduct)"
+        style="width:100%;display:flex;align-items:center;gap:14px;padding:14px;background:var(--gray-0);border:1.5px solid var(--gray-2);border-radius:var(--r-md);cursor:pointer;transition:background .18s;text-align:left"
+        onmouseover="this.style.background='var(--gray-1)'"
+        onmouseout="this.style.background='var(--gray-0)'">
+        <span style="font-size:1.6rem;flex-shrink:0">💬</span>
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:.88rem;color:var(--gray-6);margin-bottom:2px">Napisz do sprzedającego</div>
+          <div style="font-size:.75rem;color:var(--gray-4)">Ustal szczegóły przez czat i zapłać jak wolisz</div>
+        </div>
+        <span style="font-size:.8rem;color:var(--gray-4);flex-shrink:0">→</span>
+      </button>
+
+      <p style="font-size:.7rem;color:var(--gray-4);text-align:center;margin-top:12px">
+        0% prowizji · Brak ukrytych opłat · Płatność P2P
       </p>
     </div>
 
-    <!-- ─── Nieużywane kroki (zachowane dla kompatybilności JS) ── -->
+    <!-- ─── BLIK na telefon — krok szczegółowy ──────────────────── -->
+    <div class="pay-step" id="ps-blik">
+      <button type="button" onclick="goPayStep('shipping')"
+        style="display:inline-flex;align-items:center;gap:5px;background:none;border:none;font-size:.8rem;font-weight:700;color:var(--gray-4);cursor:pointer;padding:0;margin-bottom:16px">
+        ← Wróć
+      </button>
+
+      <p style="font-size:.82rem;font-weight:700;color:var(--gray-5);margin-bottom:14px">Wyślij BLIK na telefon sprzedającego</p>
+
+      <!-- Numer telefonu -->
+      <div style="background:#e8001c;border-radius:16px;padding:20px 16px;text-align:center;margin-bottom:16px;color:white">
+        <div style="font-size:.72rem;font-weight:700;opacity:.85;letter-spacing:.05em;margin-bottom:6px;text-transform:uppercase">Numer telefonu sprzedającego</div>
+        <div id="seller-phone-display" style="font-size:1.65rem;font-weight:900;letter-spacing:.12em;font-variant-numeric:tabular-nums;margin-bottom:10px">+48 601 234 567</div>
+        <button type="button" onclick="copySellerPhone()" id="copy-phone-btn"
+          style="background:rgba(255,255,255,.2);border:1.5px solid rgba(255,255,255,.5);color:white;border-radius:8px;padding:6px 16px;font-size:.78rem;font-weight:700;cursor:pointer;transition:background .15s"
+          onmouseover="this.style.background='rgba(255,255,255,.35)'"
+          onmouseout="this.style.background='rgba(255,255,255,.2)'">
+          Kopiuj numer
+        </button>
+      </div>
+
+      <!-- Kwota do wysłania -->
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:var(--gray-0);border:1.5px solid var(--gray-2);border-radius:var(--r-md);margin-bottom:16px">
+        <span style="font-size:.82rem;font-weight:700;color:var(--gray-5)">Kwota do wysłania</span>
+        <span id="blik-amount" style="font-size:1.05rem;font-weight:900;color:var(--gray-6)">89 zł</span>
+      </div>
+
+      <!-- Instrukcja krok po kroku -->
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px">
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--gray-0);border-radius:10px">
+          <span style="width:22px;height:22px;border-radius:50%;background:#e8001c;color:white;font-size:.7rem;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0">1</span>
+          <span style="font-size:.8rem;color:var(--gray-5);line-height:1.4">Otwórz aplikację bankową i przejdź do <strong>BLIK → Przelew na telefon</strong></span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--gray-0);border-radius:10px">
+          <span style="width:22px;height:22px;border-radius:50%;background:#e8001c;color:white;font-size:.7rem;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0">2</span>
+          <span style="font-size:.8rem;color:var(--gray-5);line-height:1.4">Wpisz numer telefonu sprzedającego i kwotę</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--gray-0);border-radius:10px">
+          <span style="width:22px;height:22px;border-radius:50%;background:#e8001c;color:white;font-size:.7rem;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0">3</span>
+          <span style="font-size:.8rem;color:var(--gray-5);line-height:1.4">Zatwierdź przelew w aplikacji, a następnie wróć tutaj i potwierdź</span>
+        </div>
+      </div>
+
+      <button type="button" class="pay-confirm-btn" onclick="confirmBlikP2P()">
+        Potwierdzam — wysłałem BLIK
+      </button>
+      <p style="font-size:.7rem;color:var(--gray-4);text-align:center;margin-top:10px">
+        Sprzedający zostanie powiadomiony i wyśle paczkę
+      </p>
+    </div>
+
+    <!-- ─── Sukces ─────────────────────────────────────────────── -->
+    <div class="pay-step" id="ps-success">
+      <div style="text-align:center;padding:24px 0 16px">
+        <div style="font-size:3.5rem;margin-bottom:12px">✅</div>
+        <div style="font-size:1.1rem;font-weight:900;color:var(--gray-6);margin-bottom:8px">Płatność wysłana!</div>
+        <div style="font-size:.85rem;color:var(--gray-4);line-height:1.6;margin-bottom:20px">
+          Sprzedający otrzyma powiadomienie i wyśle Twoje zamówienie<br>w ciągu <strong>2 dni roboczych</strong>.
+        </div>
+        <div style="background:var(--gray-0);border-radius:var(--r-md);padding:14px;margin-bottom:20px;text-align:left">
+          <div style="font-size:.75rem;font-weight:700;color:var(--gray-5);margin-bottom:8px">Co dalej?</div>
+          <div style="font-size:.8rem;color:var(--gray-4);line-height:1.7">
+            📦 Sprzedający nadaje paczkę i wysyła Ci numer śledzenia<br>
+            💬 Możesz śledzić zamówienie przez czat<br>
+            ⭐ Po otrzymaniu oceń sprzedającego
+          </div>
+        </div>
+        <button type="button" class="pay-confirm-btn" onclick="closePay(); goToChat(_currentProduct)">
+          💬 Napisz do sprzedającego
+        </button>
+        <button type="button" onclick="closePay()"
+          style="display:block;width:100%;margin-top:10px;padding:10px;background:none;border:1.5px solid var(--gray-2);border-radius:var(--r-md);font-size:.85rem;font-weight:700;color:var(--gray-4);cursor:pointer">
+          Zamknij
+        </button>
+      </div>
+    </div>
+
+    <!-- ─── Zachowane dla kompatybilności JS ── -->
     <div class="pay-step" id="ps-1"></div>
-    <div class="pay-step" id="ps-blik"></div>
     <div class="pay-step" id="ps-card"></div>
     <div class="pay-step" id="ps-processing"></div>
-    <div class="pay-step" id="ps-success"></div>
 
   </div>
 </div>
@@ -3508,7 +3546,9 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 
 <script>
 /* ══ API ════════════════════════════════════════════════════════ */
-var API_BASE = window.location.port === '8080' ? '' : 'http://localhost:8080';
+var API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+  ? 'http://localhost:8080'
+  : 'https://api.vipciuchy.pl';
 var _apiOnline = false;
 var _currentUser = null;
 var _csrfToken = null;
@@ -3645,7 +3685,7 @@ function loadProductsFromApi() {
       _updateLoadMoreBtn();
       renderGrid();
     })
-    .catch(function() { clearTimeout(loadTid); renderGrid(); });
+    .catch(function() { clearTimeout(loadTid); renderGrid(); showToast('Nie udało się załadować ofert — sprawdź połączenie.'); });
 }
 
 function loadMoreProducts() {
@@ -3709,7 +3749,7 @@ function renderGrid(list) {
     var imgHtml = '';
     if (p.images && p.images.length) {
       var src = _imgSrc(p.images[0]);
-      imgHtml = '<img src="' + src + '" alt="Produkt" style="width:100%;height:100%;object-fit:cover;transition:transform .35s" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">';
+      imgHtml = '<img src="' + src + '" alt="' + esc(p.brand + ' ' + p.name) + '" style="width:100%;height:100%;object-fit:cover;transition:transform .35s" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">';
     }
     imgHtml += '<div class="card-emoji" style="' + (p.images && p.images.length ? 'display:none;' : '') + 'width:100%;height:100%;align-items:center;justify-content:center">' + p.emoji + '</div>';
 
@@ -3872,14 +3912,14 @@ function saveProfile() {
 
 /* ══ DANE PRODUKTÓW (fallback gdy backend offline) ══════════════ */
 var PRODS = [
-  {name:'Sukienka w kwiaty midi', brand:'Zara', price:89, size:'S', cond:'Nowe z metką', emoji:'👗', seller:'asia_modowa', av:'A', desc:'Piękna sukienka w kwiaty. Stan idealny, noszona tylko raz. 100% wiskoza, długość midi, dekolt V.'},
-  {name:'Płaszcz wełniany camel', brand:'Reserved', price:145, size:'M', cond:'Dobry', emoji:'🧥', seller:'karolinka_sz', av:'K', desc:'Klasyczny płaszcz camel. Wełna 60%, poliester 40%. Idealny na jesień i wiosnę.'},
-  {name:'Air Force 1 białe', brand:'Nike', price:220, size:'38', cond:'Nowe z metką', emoji:'👟', seller:'marta_fashion', av:'M', desc:'Nike Air Force 1 białe. Buty sneakers, zakupione miesiąc temu, noszone tylko raz.'},
-  {name:'Torebka crossbody beżowa', brand:'H&M', price:55, size:'—', cond:'Dobry', emoji:'👜', seller:'joanna_styl', av:'J', desc:'Torebka crossbody beż. Akcesoria, torba na ramię. 22x16x6 cm. Pasek regulowany, zamek.'},
-  {name:'Jeansy 501 high waist', brand:"Levi's", price:110, size:'XS', cond:'Używane', emoji:'👖', seller:'zuzia_vintage', av:'Z', desc:"Kultowe Levi's 501, rozmiar 24/30. Spodnie jeansowe, drobne ślady użytkowania."},
-  {name:'Sweter merino ecru', brand:'Massimo Dutti', price:130, size:'L', cond:'Nowe z metką', emoji:'🧣', seller:'paulina_looks', av:'P', desc:'Sweter merino ecru. Bluzka dzianinowa, golf. Miękki, nieswędzący. Idealny do biura.'},
-  {name:'Kolczyki złote koła', brand:'Bijou Brigitte', price:25, size:'—', cond:'Dobry', emoji:'💍', seller:'ela_glam', av:'E', desc:'Kolczyki złote koła, średnica 5 cm. Biżuteria, akcesoria. Lekkie i wygodne.'},
-  {name:'Bluzka jedwabna pudrowa', brand:'Mango', price:75, size:'M', cond:'Nowe', emoji:'👔', seller:'natka_chic', av:'N', desc:'Bluzka pudrowy róż, 100% wiskoza z połyskiem. Rozmiar M.'}
+  {name:'Sukienka w kwiaty midi', brand:'Zara', price:89, size:'S', cond:'Nowe z metką', emoji:'👗', seller:'asia_modowa', av:'A', phone:'48 601 234 567', desc:'Piękna sukienka w kwiaty. Stan idealny, noszona tylko raz. 100% wiskoza, długość midi, dekolt V.'},
+  {name:'Płaszcz wełniany camel', brand:'Reserved', price:145, size:'M', cond:'Dobry', emoji:'🧥', seller:'karolinka_sz', av:'K', phone:'48 602 345 678', desc:'Klasyczny płaszcz camel. Wełna 60%, poliester 40%. Idealny na jesień i wiosnę.'},
+  {name:'Air Force 1 białe', brand:'Nike', price:220, size:'38', cond:'Nowe z metką', emoji:'👟', seller:'marta_fashion', av:'M', phone:'48 603 456 789', desc:'Nike Air Force 1 białe. Buty sneakers, zakupione miesiąc temu, noszone tylko raz.'},
+  {name:'Torebka crossbody beżowa', brand:'H&M', price:55, size:'—', cond:'Dobry', emoji:'👜', seller:'joanna_styl', av:'J', phone:'48 604 567 890', desc:'Torebka crossbody beż. Akcesoria, torba na ramię. 22x16x6 cm. Pasek regulowany, zamek.'},
+  {name:'Jeansy 501 high waist', brand:"Levi's", price:110, size:'XS', cond:'Używane', emoji:'👖', seller:'zuzia_vintage', av:'Z', phone:'48 605 678 901', desc:"Kultowe Levi's 501, rozmiar 24/30. Spodnie jeansowe, drobne ślady użytkowania."},
+  {name:'Sweter merino ecru', brand:'Massimo Dutti', price:130, size:'L', cond:'Nowe z metką', emoji:'🧣', seller:'paulina_looks', av:'P', phone:'48 606 789 012', desc:'Sweter merino ecru. Bluzka dzianinowa, golf. Miękki, nieswędzący. Idealny do biura.'},
+  {name:'Kolczyki złote koła', brand:'Bijou Brigitte', price:25, size:'—', cond:'Dobry', emoji:'💍', seller:'ela_glam', av:'E', phone:'48 607 890 123', desc:'Kolczyki złote koła, średnica 5 cm. Biżuteria, akcesoria. Lekkie i wygodne.'},
+  {name:'Bluzka jedwabna pudrowa', brand:'Mango', price:75, size:'M', cond:'Nowe', emoji:'👔', seller:'natka_chic', av:'N', phone:'48 608 901 234', desc:'Bluzka pudrowy róż, 100% wiskoza z połyskiem. Rozmiar M.'}
 ];
 
 /* ══ ROUTER ════════════════════════════════════════════════════ */
@@ -3925,7 +3965,34 @@ function goTo(p) {
       loadChatMessages(pid);
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Aktualizuj meta description i canonical dla SEO
+    _updatePageMeta(p);
   }, currentActive ? 120 : 0);
+}
+
+var _PAGE_META = {
+  home:             { title: 'vipciuchy.pl — Moda z Drugiej Ręki', desc: 'vipciuchy.pl — polska platforma z modą z drugiej ręki. Kupuj taniej, sprzedawaj łatwiej. Ponad 4200 ubrań, butów i akcesoriów.', path: '' },
+  faq:              { title: 'FAQ — Najczęstsze pytania | vipciuchy.pl', desc: 'Jak kupić? Jak zapłacić przez BLIK? Jak sprzedawać? Znajdź odpowiedzi na najczęstsze pytania dotyczące platformy vipciuchy.pl.', path: '/faq' },
+  kontakt:          { title: 'Kontakt | vipciuchy.pl', desc: 'Masz pytanie lub problem? Napisz do nas — odpowiemy w ciągu 24 godzin. Pomoc dla kupujących i sprzedających na vipciuchy.pl.', path: '/kontakt' },
+  cennik:           { title: 'Cennik | vipciuchy.pl', desc: 'Sprzedawanie na vipciuchy.pl jest bezpłatne — zero prowizji od sprzedaży. Sprawdź cennik wyróżnień i konta Premium.', path: '/cennik' },
+  regulamin:        { title: 'Regulamin | vipciuchy.pl', desc: 'Regulamin korzystania z platformy vipciuchy.pl — prawa i obowiązki użytkowników, zasady transakcji i ochrona danych.', path: '/regulamin' },
+  'jak-sprzedawac': { title: 'Jak sprzedawać? | vipciuchy.pl', desc: 'Dowiedz się jak wystawić ogłoszenie, zrobić dobre zdjęcia i bezpiecznie sfinalizować transakcję na vipciuchy.pl.', path: '/jak-sprzedawac' },
+  logowanie:        { title: 'Logowanie | vipciuchy.pl', desc: 'Zaloguj się na swoje konto vipciuchy.pl i korzystaj z platformy — kupuj, sprzedawaj i zarządzaj ogłoszeniami.', path: '/logowanie' },
+  rejestracja:      { title: 'Rejestracja | vipciuchy.pl', desc: 'Załóż bezpłatne konto na vipciuchy.pl i zacznij sprzedawać lub kupować modę z drugiej ręki.', path: '/rejestracja' },
+  sprzedaj:         { title: 'Dodaj ogłoszenie | vipciuchy.pl', desc: 'Sprzedaj ubrania, buty i akcesoria na vipciuchy.pl — bezpłatnie, bez prowizji, szybko.', path: '/sprzedaj' },
+  chat:             { title: 'Wiadomości | vipciuchy.pl', desc: 'Twoje wiadomości na vipciuchy.pl — rozmawiaj ze sprzedającymi i kupującymi.', path: '/chat' }
+};
+
+function _updatePageMeta(p) {
+  var m = _PAGE_META[p] || _PAGE_META.home;
+  document.title = m.title;
+  var descEl = document.querySelector('meta[name="description"]');
+  if (descEl) descEl.setAttribute('content', m.desc);
+  var canonEl = document.querySelector('link[rel="canonical"]');
+  if (canonEl) canonEl.setAttribute('href', 'https://vipciuchy.pl' + m.path);
+  var ogUrlEl = document.querySelector('meta[property="og:url"]');
+  if (ogUrlEl) ogUrlEl.setAttribute('content', 'https://vipciuchy.pl' + m.path);
 }
 
 /* ══ OSTATNIO OGLĄDANE ══════════════════════════════════════════ */
@@ -3949,7 +4016,7 @@ function renderRecentlyViewed() {
     var p = x.p; var i = x.idx;
     var imgHtml = '';
     if (p.images && p.images.length) {
-      imgHtml = '<img src="' + _imgSrc(p.images[0]) + '" alt="Produkt" style="width:100%;height:100%;object-fit:cover;transition:transform .35s" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">';
+      imgHtml = '<img src="' + _imgSrc(p.images[0]) + '" alt="' + esc(p.brand + ' ' + p.name) + '" style="width:100%;height:100%;object-fit:cover;transition:transform .35s" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">';
     }
     imgHtml += '<div class="card-emoji" style="' + (p.images && p.images.length ? 'display:none;' : '') + 'width:100%;height:100%;align-items:center;justify-content:center">' + p.emoji + '</div>';
     var cond = p.cond || p.condition || 'Dobry';
@@ -4063,7 +4130,7 @@ function pdCarouselNext(total) {
 function _similarCardHtml(q, qi, pos) {
   var imgHtml = '';
   if (q.images && q.images.length) {
-    imgHtml = '<img src="' + _imgSrc(q.images[0]) + '" alt="Produkt" style="width:100%;height:100%;object-fit:cover;transition:transform .35s" loading="lazy">';
+    imgHtml = '<img src="' + _imgSrc(q.images[0]) + '" alt="' + esc((q.brand||'') + ' ' + (q.name||'')) + '" style="width:100%;height:100%;object-fit:cover;transition:transform .35s" loading="lazy">';
   }
   imgHtml += '<div class="card-emoji" style="' + (q.images && q.images.length ? 'display:none;' : '') + 'width:100%;height:100%;align-items:center;justify-content:center">' + (q.emoji||'📦') + '</div>';
   var condQ = q.cond || q.condition || 'Dobry';
@@ -4135,7 +4202,6 @@ function renderSimilarProducts(currentIdx) {
 var _currentProduct = null;
 var _currentProductIdx = null;
 var PLATFORM_FEE_PCT = 0.0; // 0% — model reklamowy, brak prowizji
-var STRIPE_LINK = 'https://stripe.com'; // zastąp swoim Payment Link
 
 function openPayM(i) {
   var p = PRODS[i]; if (!p) return;
@@ -4147,15 +4213,12 @@ function openPayM(i) {
   document.getElementById('m-nm').textContent = p.name;
   document.getElementById('m-pr').textContent = p.price + ' zł';
 
-  // Ustaw linki Stripe (w produkcji: generowane przez backend)
-  var desc = encodeURIComponent('Rzeczy z Drugiej Ręki: ' + p.name);
-  var link = STRIPE_LINK + '?description=' + desc;
-  document.getElementById('p-karta').href = link;
-  document.getElementById('p-gpay').href  = link;
-  document.getElementById('p-apay').href  = link;
+  // (Stripe links removed — płatności P2P przez BLIK na telefon)
 
-  // Ustaw kwotę na przycisku BLIK
+  // Ustaw kwotę i numer telefonu dla BLIK na telefon
   document.getElementById('blik-amount').textContent = p.price + ' zł';
+  var phoneEl = document.getElementById('seller-phone-display');
+  if (phoneEl) phoneEl.textContent = '+' + (p.phone || '48 000 000 000');
 
   // Reset do kroku wysyłki
   goPayStep('shipping');
@@ -4164,6 +4227,33 @@ function openPayM(i) {
 }
 
 function openBuy(e, i) { e.stopPropagation(); openPayM(i); }
+
+/* ── BLIK na telefon — P2P ── */
+function confirmBlikP2P() {
+  goPayStep('success');
+  showToast('Płatność potwierdzona! Sprzedający wyśle paczkę wkrótce. 📦');
+}
+
+function copySellerPhone() {
+  var el = document.getElementById('seller-phone-display');
+  var btn = document.getElementById('copy-phone-btn');
+  if (!el || !btn) return;
+  var num = el.textContent.replace(/\s/g, '');
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(num).then(function() {
+      btn.textContent = 'Skopiowano ✓';
+      setTimeout(function() { btn.textContent = 'Kopiuj numer'; }, 2500);
+    });
+  } else {
+    /* Fallback dla starszych przeglądarek */
+    var ta = document.createElement('textarea');
+    ta.value = num; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); btn.textContent = 'Skopiowano ✓'; } catch(e) {}
+    document.body.removeChild(ta);
+    setTimeout(function() { btn.textContent = 'Kopiuj numer'; }, 2500);
+  }
+}
 
 function goToChat(product) {
   if (!_currentUser) { goTo('logowanie'); return; }
@@ -4212,8 +4302,9 @@ function goPayStep(step) {
     document.getElementById('ps-1').classList.add('active');
   } else if (step === 'blik') {
     document.getElementById('ps-blik').classList.add('active');
-    startBlikTimer();
-    setTimeout(function(){ var bd0 = document.getElementById('bd0'); if(bd0) bd0.focus(); }, 100);
+    // Reset copy button label po ewentualnym poprzednim użyciu
+    var cpBtn = document.getElementById('copy-phone-btn');
+    if (cpBtn) cpBtn.textContent = 'Kopiuj numer';
   } else if (step === 'card') {
     document.getElementById('ps-card').classList.add('active');
   } else if (step === 'processing') {
@@ -4224,114 +4315,8 @@ function goPayStep(step) {
   }
 }
 
-/* ── BLIK timer ── */
-var _blikTimer = null;
-var _blikSeconds = 119;
-
-function startBlikTimer() {
-  _blikSeconds = 119;
-  updateBlikTimer();
-  _blikTimer = setInterval(function() {
-    _blikSeconds--;
-    updateBlikTimer();
-    if (_blikSeconds <= 0) {
-      clearInterval(_blikTimer);
-      goPayStep('start');
-      showToast('Kod BLIK wygasł — wróć i spróbuj ponownie');
-    }
-  }, 1000);
-}
-
-function updateBlikTimer() {
-  var m = Math.floor(_blikSeconds / 60);
-  var s = _blikSeconds % 60;
-  var txt = m + ':' + (s < 10 ? '0' : '') + s;
-  var el = document.getElementById('blik-timer');
-  if (!el) return;
-  el.textContent = '⏱ ' + txt;
-  el.className = 'blik-timer' + (_blikSeconds < 30 ? ' expiring' : '');
-}
-
-/* ── BLIK input obsługa ── */
-function blikInput(el, idx) {
-  if (el.value.length > 1) el.value = el.value.slice(-1);
-  el.classList.toggle('filled', !!el.value);
-  if (el.value && idx < 5) document.getElementById('bd' + (idx+1)).focus();
-  checkBlikComplete();
-}
-
-function blikKey(e, idx) {
-  if (e.key === 'Backspace' && !document.getElementById('bd'+idx).value && idx > 0) {
-    document.getElementById('bd'+(idx-1)).focus();
-  }
-}
-
-function checkBlikComplete() {
-  var all = true;
-  for (var i = 0; i < 6; i++) {
-    var v = document.getElementById('bd'+i).value;
-    if (!v || isNaN(parseInt(v))) { all = false; break; }
-  }
-  document.getElementById('blik-btn').disabled = !all;
-}
-
-function confirmBlik() {
-  document.getElementById('proc-text').textContent = 'Weryfikacja kodu BLIK…';
-  document.getElementById('proc-sub').textContent  = 'Łączymy z Twoim bankiem · nie zamykaj okna';
-  goPayStep('processing');
-
-  if (_cartMode) {
-    // Płatność za koszyk — tworzymy zamówienia sekwencyjnie
-    if (!_apiOnline) { setTimeout(function() { _cartPaySuccess(); }, 2200); return; }
-    var cartIds = _cart.slice();
-    var idx = 0;
-    function nextOrder() {
-      if (idx >= cartIds.length) { _cartPaySuccess(); return; }
-      var prodIdx = cartIds[idx++];
-      var p = PRODS[prodIdx];
-      if (!p || !p.id) { nextOrder(); return; }
-      apiFetch('/api/orders', {
-        method: 'POST',
-        body: JSON.stringify({ product_id: p.id, payment_method: 'blik' })
-      }).then(function(r) { return r.json(); })
-        .then(function(data) {
-          if (data.error && data.error.indexOf('sprzedany') > -1) { nextOrder(); return; }
-          if (data.error) { goPayStep('start'); showToast('Błąd: ' + data.error); return; }
-          nextOrder();
-        }).catch(function() { nextOrder(); });
-    }
-    nextOrder();
-  } else if (_apiOnline && _currentProduct && _currentProduct.id) {
-    var blikCode = '';
-    for (var _bi = 0; _bi < 6; _bi++) {
-      var _bd = document.getElementById('bd' + _bi);
-      if (_bd) blikCode += _bd.value;
-    }
-    var shipData = _getShippingData();
-    apiFetch('/api/payments/confirm-dev', {
-      method: 'POST',
-      body: JSON.stringify(Object.assign({ product_id: _currentProduct.id, payment_method: 'blik', blik_code: blikCode }, shipData))
-    })
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      if (data.error) {
-        goPayStep('start');
-        showToast('Błąd: ' + data.error);
-      } else {
-        var oid = data.order ? data.order.id : null;
-        var ssEl = document.getElementById('success-order-id');
-        if (ssEl && oid) ssEl.textContent = 'Zamówienie #' + oid;
-        goPayStep('success');
-        if (_apiOnline) { loadProductsFromApi(); }
-      }
-    })
-    .catch(function() {
-      setTimeout(function() { goPayStep('success'); }, 800);
-    });
-  } else {
-    setTimeout(function() { goPayStep('success'); }, 2200);
-  }
-}
+/* ── BLIK timer (usunięty — P2P nie wymaga) ── */
+var _blikTimer = null; // zachowane by closePay() nie crashowało clearInterval
 
 function _cartPaySuccess() {
   clearCart();
@@ -4353,9 +4338,12 @@ function showSuccess(orderId) {
   var platform = Math.round(total * PLATFORM_FEE_PCT * 100) / 100;
   var seller   = Math.round((total - platform) * 100) / 100;
 
-  document.getElementById('ss-total').textContent    = total.toFixed(2).replace('.',',') + ' zł';
-  document.getElementById('ss-seller').textContent   = seller.toFixed(2).replace('.',',') + ' zł';
-  document.getElementById('ss-platform').textContent = platform.toFixed(2).replace('.',',') + ' zł';
+  var ssTotal    = document.getElementById('ss-total');
+  var ssSeller   = document.getElementById('ss-seller');
+  var ssPlatform = document.getElementById('ss-platform');
+  if (ssTotal)    ssTotal.textContent    = total.toFixed(2).replace('.',',') + ' zł';
+  if (ssSeller)   ssSeller.textContent   = seller.toFixed(2).replace('.',',') + ' zł';
+  if (ssPlatform) ssPlatform.textContent = platform.toFixed(2).replace('.',',') + ' zł';
 }
 
 /* ══ CZAT ══════════════════════════════════════════════════════ */
@@ -4718,7 +4706,7 @@ function openSeller(name, av, stars, count, sellerId) {
             var cond = p.cond || p.condition || 'Dobry';
             var condClass = cond.indexOf('Nowe') > -1 ? 'new' : cond === 'Używane' ? 'used' : 'good';
             var condLabel = condClass === 'new' ? 'Nowe' : condClass === 'used' ? 'Używane' : 'Dobry';
-            var imgHtml = (p.images && p.images.length) ? '<img src="' + _imgSrc(p.images[0]) + '" alt="Produkt" style="width:100%;height:100%;object-fit:cover" loading="lazy">' : '';
+            var imgHtml = (p.images && p.images.length) ? '<img src="' + _imgSrc(p.images[0]) + '" alt="' + esc(p.brand + ' ' + p.name) + '" style="width:100%;height:100%;object-fit:cover" loading="lazy">' : '';
             imgHtml += '<div class="card-emoji" style="' + (p.images && p.images.length ? 'display:none;' : '') + 'width:100%;height:100%;align-items:center;justify-content:center">' + p.emoji + '</div>';
             return '<div class="card" role="button" tabindex="0" onclick="openProd(' + idx + ')" onkeydown="if(event.key===\'Enter\'||event.key===\' \')openProd(' + idx + ')" aria-label="' + esc(p.brand) + ' ' + esc(p.name) + '" style="--i:' + pos + '">' +
               '<div class="card-img"><div class="card-img-inner" style="position:relative;width:100%;height:100%">' + imgHtml + '</div>' +
@@ -4942,7 +4930,7 @@ function renderFavPage() {
     var condLabel = condClass === 'new' ? 'Nowe' : condClass === 'used' ? 'Używane' : 'Dobry';
     var imgHtml = '';
     if (p.images && p.images.length) {
-      imgHtml = '<img src="' + _imgSrc(p.images[0]) + '" alt="Produkt" style="width:100%;height:100%;object-fit:cover;transition:transform .35s" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">';
+      imgHtml = '<img src="' + _imgSrc(p.images[0]) + '" alt="' + esc(p.brand + ' ' + p.name) + '" style="width:100%;height:100%;object-fit:cover;transition:transform .35s" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">';
     }
     imgHtml += '<div class="card-emoji" style="' + (p.images && p.images.length ? 'display:none;' : '') + 'width:100%;height:100%;align-items:center;justify-content:center">' + p.emoji + '</div>';
     return '<div class="card" role="button" tabindex="0" onclick="openProd(' + i + ')" onkeydown="if(event.key===\'Enter\'||event.key===\' \')openProd(' + i + ')" aria-label="' + esc(p.brand) + ' ' + esc(p.name) + ', ' + parseFloat(p.price||0) + ' zł" style="--i:' + pos + '">' +
@@ -5333,7 +5321,7 @@ document.addEventListener('keydown', function(e) {
 function shareProduct() {
   var p = _currentProduct;
   if (!p) return;
-  var text = 'rzeczy.pl — ' + p.name + ' za tylko ' + p.price + ' zł!';
+  var text = 'vipciuchy.pl — ' + p.name + ' za tylko ' + p.price + ' zł!';
   var url = window.location.origin + window.location.pathname + '?produkt=' + encodeURIComponent(p.name);
 
   if (navigator.share) {
@@ -5501,7 +5489,7 @@ function renderMyProducts(products) {
     var hidden = p.is_hidden || false;
     var imgSrc = (p.images && p.images.length) ? _imgSrc(p.images[0]) : '';
     var imgHtml = imgSrc
-      ? '<img class="my-card-img" src="' + imgSrc + '" alt="Produkt" loading="lazy">'
+      ? '<img class="my-card-img" src="' + imgSrc + '" alt="' + esc(p.brand + ' ' + p.name) + '" loading="lazy">'
       : '<div class="my-card-img" style="display:flex;align-items:center;justify-content:center;font-size:3rem">' + (p.emoji || '📦') + '</div>';
 
     var statusLabels = { available: '<span class="status-badge available">✅ Dostępne</span>',
