@@ -7,7 +7,6 @@ import os
 import sys
 import logging
 from flask import Flask, jsonify, send_file, request, session
-from flask_cors import CORS
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from dotenv import load_dotenv
@@ -56,12 +55,29 @@ app.config["SESSION_COOKIE_SECURE"]   = IS_PROD  # True tylko przy HTTPS
 app.config["PERMANENT_SESSION_LIFETIME"] = 60 * 60 * 24 * 30  # 30 dni
 app.config["MAX_CONTENT_LENGTH"] = 10 * 1024 * 1024  # 10 MB max body
 
-# ── CORS ─────────────────────────────────────────────────────────
-CORS(app,
-     supports_credentials=True,
-     origins=ALLOWED_ORIGINS,
-     allow_headers=["Content-Type", "X-CSRF-Token"],
-     methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"])
+# ── CORS — ręczne nagłówki (flask-cors 6.x ma breaking changes) ──
+@app.after_request
+def apply_cors(response):
+    origin = request.headers.get("Origin", "")
+    if origin in ALLOWED_ORIGINS:
+        response.headers["Access-Control-Allow-Origin"]      = origin
+        response.headers["Access-Control-Allow-Credentials"] = "true"
+        response.headers["Access-Control-Allow-Headers"]     = "Content-Type, X-CSRF-Token"
+        response.headers["Access-Control-Allow-Methods"]     = "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+    return response
+
+@app.before_request
+def handle_options():
+    if request.method == "OPTIONS":
+        from flask import Response
+        origin = request.headers.get("Origin", "")
+        resp = Response("", 204)
+        if origin in ALLOWED_ORIGINS:
+            resp.headers["Access-Control-Allow-Origin"]      = origin
+            resp.headers["Access-Control-Allow-Credentials"] = "true"
+            resp.headers["Access-Control-Allow-Headers"]     = "Content-Type, X-CSRF-Token"
+            resp.headers["Access-Control-Allow-Methods"]     = "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+        return resp
 
 # ── Rate limiting ─────────────────────────────────────────────────
 limiter = Limiter(
