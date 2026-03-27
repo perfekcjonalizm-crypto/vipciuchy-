@@ -169,7 +169,12 @@ from routes.csrf import generate_csrf
 
 @app.get("/api/csrf")
 def csrf_token():
-    return jsonify({"csrf": generate_csrf()})
+    resp = jsonify({"csrf": generate_csrf()})
+    # Hardcoded CORS test — sprawdzamy czy Fastly nie zcina nagłówków
+    resp.headers["X-Debug-Cors-Set"] = "yes"
+    resp.headers["Access-Control-Allow-Origin"] = "https://vipciuchy.pl"
+    resp.headers["Access-Control-Allow-Credentials"] = "true"
+    return resp
 
 # ── Healthcheck ───────────────────────────────────────────────────
 @app.get("/api/health")
