@@ -4,7 +4,7 @@ db.py — inicjalizacja SQLite i helpery
 import sqlite3
 import os
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "rzeczy.db")
+DB_PATH = os.environ.get("DB_PATH", os.path.join(os.path.dirname(__file__), "rzeczy.db"))
 
 
 def get_db():
