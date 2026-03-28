@@ -135,6 +135,7 @@ def verify():
         conn.commit()
 
         user = conn.execute("SELECT * FROM users WHERE id=?", (user_id,)).fetchone()
+        session.permanent = True
         session["user_id"] = user["id"]
         from routes.csrf import generate_csrf
         return jsonify({"user": _user_dict(user), "csrf": generate_csrf()})
@@ -245,6 +246,7 @@ def login():
         conn.execute("UPDATE users SET failed_logins=0, locked_until=NULL WHERE id=?", (user["id"],))
         conn.commit()
 
+        session.permanent = True
         session["user_id"] = user["id"]
         from routes.csrf import generate_csrf
         return jsonify({"user": _user_dict(user), "csrf": generate_csrf()})
