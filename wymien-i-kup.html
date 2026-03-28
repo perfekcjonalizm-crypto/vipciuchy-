@@ -4395,6 +4395,12 @@ function doLogin() {
     .then(function(r) { return r.json(); })
     .then(function(data) {
       setButtonLoading(btn, false);
+      if (data.pending_verification && data.user_id) {
+        _pendingUserId = data.user_id;
+        showToast('Konto czeka na weryfikację — sprawdź e-mail.');
+        goTo('weryfikacja');
+        return;
+      }
       if (data.error) { showToast('Błąd: ' + data.error); return; }
       if (data.csrf) _csrfToken = data.csrf;
       _currentUser = data.user;
