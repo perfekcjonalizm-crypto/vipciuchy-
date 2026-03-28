@@ -12,8 +12,8 @@ from routes.csrf import csrf_required
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/api/auth")
 
-# Tryb DEV gdy brak konfiguracji SMTP — kody widoczne w odpowiedzi API
-IS_DEV = not bool(os.environ.get("SMTP_HOST"))
+# Tryb DEV gdy brak klucza Resend — kody widoczne w odpowiedzi API
+IS_DEV = not bool(os.environ.get("RESEND_API_KEY"))
 
 
 def _user_dict(row):

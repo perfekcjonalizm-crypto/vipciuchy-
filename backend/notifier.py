@@ -34,6 +34,7 @@ def _send_resend(to_email: str, subject: str, body: str) -> bool:
         if resp.status_code not in (200, 201):
             log.error(f"Resend error {resp.status_code}: {resp.text}")
             return False
+        log.info(f"Resend OK: wysłano e-mail do {to_email}")
         return True
     except Exception as e:
         log.error(f"Błąd wysyłki e-mail (Resend): {e}")
