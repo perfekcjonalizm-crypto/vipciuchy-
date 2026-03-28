@@ -2656,7 +2656,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
     <button type="button" class="back-btn" onclick="goTo('home')">← Strona główna</button>
     <div class="sp-card">
       <div class="fgrp"><label>Login lub e-mail</label><input id="login-user" type="text" placeholder="adres@example.pl lub nick" onkeydown="if(event.key==='Enter')doLogin()"></div>
-      <div class="fgrp"><label>Hasło</label><input id="login-pass" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <div class="fgrp"><label>Hasło</label><div style="position:relative"><input id="login-pass" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()" style="padding-right:40px;width:100%;box-sizing:border-box"><button type="button" onclick="togglePass('login-pass',this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--gray-4);font-size:1.1rem;padding:0;line-height:1">👁</button></div></div>
       <button type="button" class="btn-submit" id="login-submit-btn" onclick="doLogin()">Zaloguj się</button>
       <p class="form-note" style="margin-top:10px">Zapomniałaś hasła? <a onclick="goTo('reset-request')" style="cursor:pointer;color:var(--teal)">Zresetuj hasło</a></p>
       <div class="form-sep">lub kontynuuj przez</div>
@@ -2676,7 +2676,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
       <div class="fgrp"><label>Pseudonim</label><input id="reg-user" type="text" placeholder="karolinka_sz" onkeydown="if(event.key==='Enter')doRegister()"></div>
       <div class="fgrp"><label>E-mail</label><input id="reg-email" type="email" placeholder="adres@example.pl" onkeydown="if(event.key==='Enter')doRegister()"></div>
       <div class="fgrp"><label>Numer telefonu</label><input id="reg-phone" type="tel" placeholder="+48 500 000 000" onkeydown="if(event.key==='Enter')doRegister()"></div>
-      <div class="fgrp"><label>Hasło</label><input id="reg-pass" type="password" placeholder="Min. 6 znaków" onkeydown="if(event.key==='Enter')doRegister()"></div>
+      <div class="fgrp"><label>Hasło</label><div style="position:relative"><input id="reg-pass" type="password" placeholder="Min. 6 znaków" onkeydown="if(event.key==='Enter')doRegister()" style="padding-right:40px;width:100%;box-sizing:border-box"><button type="button" onclick="togglePass('reg-pass',this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--gray-4);font-size:1.1rem;padding:0;line-height:1">👁</button></div></div>
       <div class="fgrp" style="flex-direction:row;align-items:flex-start;gap:10px">
         <input type="checkbox" id="reg-age" style="margin-top:3px;flex-shrink:0;width:16px;height:16px;accent-color:var(--teal)">
         <label for="reg-age" style="font-size:.8rem;line-height:1.5;font-weight:500;color:var(--gray-5)">
@@ -3240,7 +3240,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
       <p class="reg-para">Masz prawo do bycia zapomnianym. Twoje dane zostaną zanonimizowane — konto i wiadomości zostaną usunięte. Ogłoszenia i zamówienia pozostaną w celach rozliczeniowych, ale bez powiązania z Tobą.</p>
       <div class="fgrp" style="margin-top:16px">
         <label>Potwierdź hasłem, aby usunąć konto</label>
-        <input id="delete-pass" type="password" placeholder="Twoje hasło">
+        <div style="position:relative"><input id="delete-pass" type="password" placeholder="Twoje hasło" style="padding-right:40px;width:100%;box-sizing:border-box"><button type="button" onclick="togglePass('delete-pass',this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--gray-4);font-size:1.1rem;padding:0;line-height:1">👁</button></div>
       </div>
       <button type="button" onclick="deleteAccount()" style="
         margin-top:8px;background:var(--coral);color:white;border:none;
@@ -3351,7 +3351,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
       </div>
       <div class="fgrp">
         <label>🔒 Nowe hasło</label>
-        <input id="reset-newpass" type="password" placeholder="Min. 6 znaków" onkeydown="if(event.key==='Enter')doResetConfirm()">
+        <div style="position:relative"><input id="reset-newpass" type="password" placeholder="Min. 6 znaków" onkeydown="if(event.key==='Enter')doResetConfirm()" style="padding-right:40px;width:100%;box-sizing:border-box"><button type="button" onclick="togglePass('reset-newpass',this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--gray-4);font-size:1.1rem;padding:0;line-height:1">👁</button></div>
       </div>
       <button type="button" class="btn-submit" onclick="doResetConfirm()">Ustaw nowe hasło</button>
     </div>
@@ -5012,6 +5012,13 @@ function togFavPage(e, b, idx) {
 document.querySelectorAll('.filter-pill').forEach(function(c) { c.addEventListener('click', function() { c.classList.toggle('on'); }); });
 function togFaq(b) { var a = b.nextElementSibling, o = b.classList.toggle('open'); if (a) a.classList.toggle('open', o); }
 var _tt;
+function togglePass(id, btn) {
+  var inp = document.getElementById(id);
+  if (!inp) return;
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+  btn.textContent = inp.type === 'password' ? '👁' : '🙈';
+}
+
 function showToast(m) {
   var t = document.getElementById('toast');
   t.textContent = m; t.style.transform = 'translateX(-50%) translateY(0)';
