@@ -2660,7 +2660,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
       <button type="button" class="btn-submit" id="login-submit-btn" onclick="doLogin()">Zaloguj się</button>
       <p class="form-note" style="margin-top:10px">Zapomniałaś hasła? <a onclick="goTo('reset-request')" style="cursor:pointer;color:var(--teal)">Zresetuj hasło</a></p>
       <div class="form-sep">lub kontynuuj przez</div>
-      <button type="button" class="btn-outline-submit" onclick="showToast('Google — wkrótce!')">🔵 Google</button>
+      <button type="button" class="btn-outline-submit" onclick="window.location.href='https://vipciuchy-production.up.railway.app/api/auth/google/login'">🔵 Google</button>
       <button type="button" class="btn-outline-submit" onclick="showToast('Facebook — wkrótce!')">🔷 Facebook</button>
       <p class="form-note">Nie masz konta? <a onclick="goTo('rejestracja')">Zarejestruj się</a></p>
     </div>
@@ -3610,6 +3610,16 @@ var _csrfToken = null;
       // Produkty i auth równolegle
       loadProductsFromApi();
       checkAuthApi();
+      // Obsługa powrotu z Google OAuth
+      var urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('google_login') === 'ok') {
+        history.replaceState({}, '', window.location.pathname);
+        showToast('Zalogowano przez Google!');
+      }
+      if (urlParams.get('error') === 'google_auth_failed') {
+        history.replaceState({}, '', window.location.pathname);
+        showToast('Błąd logowania przez Google. Spróbuj ponownie.');
+      }
     })
     .catch(function() {
       clearTimeout(tid);

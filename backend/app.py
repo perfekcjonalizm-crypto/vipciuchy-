@@ -45,7 +45,8 @@ from routes.admin     import admin_bp
 from routes.reports   import reports_bp
 from routes.reviews   import reviews_bp
 from routes.payments  import payments_bp
-from routes.shipping  import shipping_bp
+from routes.shipping      import shipping_bp
+from routes.google_auth   import google_auth_bp
 
 # ── Aplikacja ─────────────────────────────────────────────────────
 app = Flask(__name__)
@@ -134,6 +135,7 @@ app.register_blueprint(reports_bp)
 app.register_blueprint(reviews_bp)
 app.register_blueprint(payments_bp)
 app.register_blueprint(shipping_bp)
+app.register_blueprint(google_auth_bp)
 
 # Surowszy rate limit na logowanie
 limiter.limit("10 per 15 minutes")(app.view_functions["auth.login"])
