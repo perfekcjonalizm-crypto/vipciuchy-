@@ -2678,6 +2678,12 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
       <div class="fgrp"><label>Numer telefonu</label><input id="reg-phone" type="tel" placeholder="+48 500 000 000" onkeydown="if(event.key==='Enter')doRegister()"></div>
       <div class="fgrp"><label>Hasło</label><input id="reg-pass" type="password" placeholder="Min. 6 znaków" onkeydown="if(event.key==='Enter')doRegister()"></div>
       <div class="fgrp" style="flex-direction:row;align-items:flex-start;gap:10px">
+        <input type="checkbox" id="reg-age" style="margin-top:3px;flex-shrink:0;width:16px;height:16px;accent-color:var(--teal)">
+        <label for="reg-age" style="font-size:.8rem;line-height:1.5;font-weight:500;color:var(--gray-5)">
+          Oświadczam, że mam ukończone <strong>18 lat</strong> i jestem pełnoletni/a.
+        </label>
+      </div>
+      <div class="fgrp" style="flex-direction:row;align-items:flex-start;gap:10px">
         <input type="checkbox" id="reg-rodo" style="margin-top:3px;flex-shrink:0;width:16px;height:16px;accent-color:var(--teal)">
         <label for="reg-rodo" style="font-size:.8rem;line-height:1.5;font-weight:500;color:var(--gray-5)">
           Przeczytałem/am i akceptuję <a onclick="goTo('regulamin')" style="color:var(--teal);cursor:pointer">Regulamin</a>
@@ -2922,7 +2928,9 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   <div class="sp-body">
     <button type="button" class="back-btn" onclick="goTo('home')">← Strona główna</button>
     <div class="sp-card"><h2>Administrator danych</h2><p>Rafał Derkowski, ul. Głowackiego 1a/4, 05-071 Sulejówek · r.derkowski@wp.pl. Dane przetwarzane zgodnie z RODO (UE) 2016/679.</p></div>
-    <div class="sp-card"><h2>Zbierane dane</h2><ul><li>E-mail i pseudonim (rejestracja)</li><li>Adres dostawy (zakup)</li><li>Historia transakcji (5 lat)</li><li>Logi systemowe (12 miesięcy)</li></ul></div>
+    <div class="sp-card"><h2>Zbierane dane</h2><ul><li>E-mail i pseudonim (rejestracja)</li><li>Numer telefonu (rejestracja)</li><li>Adres dostawy (zakup)</li><li>Historia transakcji (5 lat)</li><li>Logi systemowe (12 miesięcy)</li></ul></div>
+    <div class="sp-card"><h2>Okres przechowywania danych (Art. 5 ust. 1 lit. e RODO)</h2><ul><li><strong>Dane konta</strong> — przez czas trwania umowy + 1 rok po usunięciu konta</li><li><strong>Historia transakcji</strong> — 5 lat (obowiązek podatkowy)</li><li><strong>Wiadomości</strong> — 2 lata od ostatniej aktywności</li><li><strong>Logi systemowe</strong> — 12 miesięcy</li><li><strong>Konta nieaktywne</strong> — usuwane po 24 miesiącach braku aktywności (z powiadomieniem e-mail 30 dni wcześniej)</li></ul></div>
+    <div class="sp-card"><h2>Podstawa prawna przetwarzania (Art. 6 RODO)</h2><ul><li><strong>Art. 6 ust. 1 lit. b</strong> — wykonanie umowy (obsługa konta, transakcje)</li><li><strong>Art. 6 ust. 1 lit. c</strong> — obowiązek prawny (przepisy podatkowe, 5 lat)</li><li><strong>Art. 6 ust. 1 lit. a</strong> — zgoda (weryfikacja e-mail, komunikacja)</li></ul></div>
     <div class="sp-card"><h2>Twoje prawa (Art. 15–21 RODO)</h2><ul><li>Dostęp i sprostowanie danych (art. 15–16)</li><li>Usunięcie danych ("prawo do bycia zapomnianym", art. 17)</li><li>Ograniczenie przetwarzania (art. 18)</li><li>Przenoszenie danych (art. 20) — pobierz plik JSON ze swoimi danymi</li><li>Sprzeciw (art. 21)</li><li>Prawo do skargi do Prezesa UODO, ul. Stawki 2, 00-193 Warszawa</li></ul><p style="margin-top:12px">Kontakt: r.derkowski@wp.pl · Odpowiedź w 30 dni roboczych</p><p style="margin-top:10px"><a onclick="goToSettings()" style="color:var(--teal);cursor:pointer;font-weight:700">→ Zarządzaj kontem i danymi (Ustawienia)</a></p></div>
   </div>
 </div>
@@ -3485,6 +3493,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
       <button type="button" id="atab-users" class="atab atab-active" onclick="switchAdminTab('users')">👥 Użytkownicy</button>
       <button type="button" id="atab-products" class="atab" onclick="switchAdminTab('products')">📦 Oferty</button>
       <button type="button" id="atab-reports" class="atab" onclick="switchAdminTab('reports')">🚩 Zgłoszenia</button>
+      <button type="button" id="atab-rodo" class="atab" onclick="switchAdminTab('rodo')">📋 Rejestr RODO</button>
     </div>
 
     <!-- Wyszukiwarka -->
@@ -3503,6 +3512,43 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
     <!-- Lista wyników -->
     <div id="admin-list"></div>
     <div style="display:flex;gap:8px;justify-content:center;margin-top:16px" id="admin-pagination"></div>
+
+    <!-- Rejestr czynności przetwarzania (Art. 30 RODO) -->
+    <div id="admin-rodo-tab" style="display:none">
+      <div class="sp-card" style="margin-bottom:16px">
+        <div class="reg-h1">Rejestr czynności przetwarzania danych osobowych</div>
+        <p class="reg-para" style="color:var(--gray-4);font-size:.82rem">Art. 30 RODO (UE) 2016/679 · Administrator: Rafał Derkowski · Ostatnia aktualizacja: 19.03.2026</p>
+      </div>
+      <div class="sp-card" style="margin-bottom:12px">
+        <h3 style="font-size:.95rem;margin-bottom:10px;color:var(--teal)">1. Obsługa kont użytkowników</h3>
+        <table style="width:100%;font-size:.83rem;border-collapse:collapse">
+          <tr style="border-bottom:1px solid var(--gray-1)"><td style="padding:6px 8px;color:var(--gray-4);width:40%">Cel</td><td style="padding:6px 8px">Rejestracja i uwierzytelnianie użytkowników</td></tr>
+          <tr style="border-bottom:1px solid var(--gray-1)"><td style="padding:6px 8px;color:var(--gray-4)">Kategorie danych</td><td style="padding:6px 8px">E-mail, pseudonim, hash hasła, numer telefonu</td></tr>
+          <tr style="border-bottom:1px solid var(--gray-1)"><td style="padding:6px 8px;color:var(--gray-4)">Podstawa prawna</td><td style="padding:6px 8px">Art. 6 ust. 1 lit. b RODO (wykonanie umowy)</td></tr>
+          <tr style="border-bottom:1px solid var(--gray-1)"><td style="padding:6px 8px;color:var(--gray-4)">Okres retencji</td><td style="padding:6px 8px">Czas trwania konta + 1 rok</td></tr>
+          <tr><td style="padding:6px 8px;color:var(--gray-4)">Odbiorcy</td><td style="padding:6px 8px">Resend.com (weryfikacja e-mail) — EU region</td></tr>
+        </table>
+      </div>
+      <div class="sp-card" style="margin-bottom:12px">
+        <h3 style="font-size:.95rem;margin-bottom:10px;color:var(--teal)">2. Realizacja transakcji</h3>
+        <table style="width:100%;font-size:.83rem;border-collapse:collapse">
+          <tr style="border-bottom:1px solid var(--gray-1)"><td style="padding:6px 8px;color:var(--gray-4);width:40%">Cel</td><td style="padding:6px 8px">Obsługa zamówień, płatności, wysyłki</td></tr>
+          <tr style="border-bottom:1px solid var(--gray-1)"><td style="padding:6px 8px;color:var(--gray-4)">Kategorie danych</td><td style="padding:6px 8px">Adres dostawy, dane zamówienia, historia płatności</td></tr>
+          <tr style="border-bottom:1px solid var(--gray-1)"><td style="padding:6px 8px;color:var(--gray-4)">Podstawa prawna</td><td style="padding:6px 8px">Art. 6 ust. 1 lit. b (umowa) + lit. c (obowiązek prawny)</td></tr>
+          <tr style="border-bottom:1px solid var(--gray-1)"><td style="padding:6px 8px;color:var(--gray-4)">Okres retencji</td><td style="padding:6px 8px">5 lat (obowiązek podatkowy — Ustawa o rachunkowości)</td></tr>
+          <tr><td style="padding:6px 8px;color:var(--gray-4)">Odbiorcy</td><td style="padding:6px 8px">Stripe Inc. (płatności) — Standard Contractual Clauses</td></tr>
+        </table>
+      </div>
+      <div class="sp-card" style="margin-bottom:12px">
+        <h3 style="font-size:.95rem;margin-bottom:10px;color:var(--teal)">3. Logi systemowe i bezpieczeństwo</h3>
+        <table style="width:100%;font-size:.83rem;border-collapse:collapse">
+          <tr style="border-bottom:1px solid var(--gray-1)"><td style="padding:6px 8px;color:var(--gray-4);width:40%">Cel</td><td style="padding:6px 8px">Ochrona przed nadużyciami, debugging</td></tr>
+          <tr style="border-bottom:1px solid var(--gray-1)"><td style="padding:6px 8px;color:var(--gray-4)">Kategorie danych</td><td style="padding:6px 8px">Adresy IP, user-agent, znaczniki czasu</td></tr>
+          <tr style="border-bottom:1px solid var(--gray-1)"><td style="padding:6px 8px;color:var(--gray-4)">Podstawa prawna</td><td style="padding:6px 8px">Art. 6 ust. 1 lit. f RODO (uzasadniony interes)</td></tr>
+          <tr><td style="padding:6px 8px;color:var(--gray-4)">Okres retencji</td><td style="padding:6px 8px">12 miesięcy</td></tr>
+        </table>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -4422,6 +4468,10 @@ function doRegister() {
   var password = document.getElementById('reg-pass').value  || '';
   if (!username || !email || !phone || !password) { showToast('Wypełnij wszystkie pola'); return; }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showToast('Podaj poprawny adres e-mail'); return; }
+  if (!document.getElementById('reg-age').checked) {
+    showToast('Musisz mieć ukończone 18 lat, aby założyć konto.');
+    return;
+  }
   if (!document.getElementById('reg-rodo').checked) {
     showToast('Zaakceptuj Regulamin i Politykę Prywatności, aby kontynuować.');
     return;
@@ -6288,14 +6338,29 @@ var _adminPage = 1;
 function switchAdminTab(tab) {
   _adminTab  = tab;
   _adminPage = 1;
-  ['users','products','reports'].forEach(function(t) {
+  ['users','products','reports','rodo'].forEach(function(t) {
     var el = document.getElementById('atab-' + t);
     if (el) el.classList.toggle('atab-active', t === tab);
   });
   var pf = document.getElementById('admin-prod-filters');
   if (pf) pf.style.display = tab === 'products' ? '' : 'none';
-  document.getElementById('admin-search').value = '';
-  loadAdminList();
+  var rodoTab = document.getElementById('admin-rodo-tab');
+  var mainList = document.getElementById('admin-list');
+  var mainPag  = document.getElementById('admin-pagination');
+  var searchBox = document.getElementById('admin-search');
+  if (tab === 'rodo') {
+    if (rodoTab)  rodoTab.style.display  = '';
+    if (mainList) mainList.style.display = 'none';
+    if (mainPag)  mainPag.style.display  = 'none';
+    if (searchBox) searchBox.parentElement.style.display = 'none';
+  } else {
+    if (rodoTab)  rodoTab.style.display  = 'none';
+    if (mainList) mainList.style.display = '';
+    if (mainPag)  mainPag.style.display  = '';
+    if (searchBox) searchBox.parentElement.style.display = '';
+    searchBox.value = '';
+    loadAdminList();
+  }
 }
 
 function adminSearch() {
