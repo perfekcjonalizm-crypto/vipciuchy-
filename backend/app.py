@@ -53,11 +53,11 @@ app.secret_key        = SECRET_KEY
 app.config["ENV"]     = ENV
 app.config["DEBUG"]   = not IS_PROD
 
-# Bezpieczne ciasteczka sesji w produkcji
-# SameSite=None wymagane gdy frontend (vipciuchy.pl) i API (railway.app) to różne originy
+# Bezpieczne ciasteczka sesji — frontend i API na tej samej domenie vipciuchy.pl
 app.config["SESSION_COOKIE_HTTPONLY"] = True
-app.config["SESSION_COOKIE_SAMESITE"] = "None"
-app.config["SESSION_COOKIE_SECURE"]   = True  # SameSite=None wymaga Secure=True
+app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+app.config["SESSION_COOKIE_SECURE"]   = IS_PROD
+app.config["SESSION_COOKIE_DOMAIN"]   = ".vipciuchy.pl" if IS_PROD else None
 app.config["PERMANENT_SESSION_LIFETIME"] = 60 * 60 * 24 * 30  # 30 dni
 app.config["MAX_CONTENT_LENGTH"] = 10 * 1024 * 1024  # 10 MB max body
 

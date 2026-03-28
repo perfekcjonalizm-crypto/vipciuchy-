@@ -3585,7 +3585,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 /* ══ API ════════════════════════════════════════════════════════ */
 var API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
   ? 'http://localhost:8080'
-  : 'https://vipciuchy-production.up.railway.app';
+  : 'https://api.vipciuchy.pl';
 var _apiOnline = false;
 var _currentUser = null;
 var _csrfToken = null;
@@ -3977,7 +3977,11 @@ function goTo(p) {
     });
     if (p !== 'home') {
       var el = document.getElementById('page-' + p);
-      if (el) { el.classList.add('active'); } else { goTo('home'); return; }
+      if (el) {
+        el.classList.add('active');
+        el.style.opacity = '';
+        el.style.transform = '';
+      } else { goTo('home'); return; }
     }
     // Reset search when navigating away from home
     if (p !== 'home' && typeof _searchQuery !== 'undefined') {
