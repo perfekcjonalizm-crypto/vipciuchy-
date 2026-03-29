@@ -425,7 +425,7 @@ def update_product(pid):
         desc  = (data.get("description") or prod["description"] or "").strip()
         emoji = (data.get("emoji") or prod["emoji"] or "👗").strip()
         images = json.dumps(data.get("images")) if "images" in data else prod["images"]
-        category = (data.get("category") or prod.get("category") or "").strip()[:50]
+        category = (data.get("category") or (prod["category"] if "category" in prod.keys() else "") or "").strip()[:50]
 
         try:
             price = float(price)
