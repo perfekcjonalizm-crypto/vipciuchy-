@@ -2,6 +2,14 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LTEGQB667V"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-LTEGQB667V');
+</script>
 <script src="https://js.stripe.com/v3/" async></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>vipciuchy.pl — Moda z Drugiej Ręki</title>
@@ -2249,33 +2257,15 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
       <!-- Powiadomienia — widoczne po zalogowaniu -->
       <div class="notif-wrap" id="notif-wrap" style="display:none">
         <button type="button" class="nav-icon" aria-label="Powiadomienia" onclick="toggleNotif()" id="notif-btn">
-          🔔 <span class="badge" id="notif-badge">3</span>
+          🔔 <span class="badge" id="notif-badge" style="display:none">0</span>
         </button>
         <div class="notif-dropdown" id="notif-dropdown">
           <div class="notif-header">
-            <span>Powiadomienia</span>
-            <span style="font-size:.72rem;font-weight:600;color:var(--teal);cursor:pointer" onclick="clearNotif()">Oznacz jako przeczytane</span>
+            <span>Wiadomości</span>
+            <span style="font-size:.72rem;font-weight:600;color:var(--teal);cursor:pointer" onclick="goTo('chat');document.getElementById('notif-dropdown').classList.remove('open')">Wszystkie →</span>
           </div>
-          <div class="notif-item" onclick="showToast('Przejdź do ogłoszenia')">
-            <div class="notif-dot"></div>
-            <div>
-              <div class="notif-text">Ktoś polubił Twoje ogłoszenie „Sukienka w kwiaty midi"</div>
-              <div class="notif-time">5 minut temu</div>
-            </div>
-          </div>
-          <div class="notif-item" onclick="goTo('chat')">
-            <div class="notif-dot"></div>
-            <div>
-              <div class="notif-text">Nowa wiadomość od karolinka_sz: „Czy mogę obejrzeć?"</div>
-              <div class="notif-time">23 minuty temu</div>
-            </div>
-          </div>
-          <div class="notif-item" onclick="goTo('moje-ogloszenia')">
-            <div class="notif-dot" style="background:var(--amber)"></div>
-            <div>
-              <div class="notif-text">Twoje ogłoszenie zostało wyświetlone 12 razy</div>
-              <div class="notif-time">2 godziny temu</div>
-            </div>
+          <div id="notif-list">
+            <div style="padding:16px;text-align:center;color:var(--gray-4);font-size:.82rem">Ładowanie…</div>
           </div>
         </div>
       </div>
@@ -2660,7 +2650,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
       <button type="button" class="btn-submit" id="login-submit-btn" onclick="doLogin()">Zaloguj się</button>
       <p class="form-note" style="margin-top:10px">Zapomniałaś hasła? <a onclick="goTo('reset-request')" style="cursor:pointer;color:var(--teal)">Zresetuj hasło</a></p>
       <div class="form-sep">lub kontynuuj przez</div>
-      <button type="button" class="btn-outline-submit" onclick="window.location.href='https://vipciuchy-production.up.railway.app/api/auth/google/login'">🔵 Google</button>
+      <button type="button" class="btn-outline-submit" onclick="window.location.href=API_BASE+'/api/auth/google/login'">🔵 Google</button>
       <button type="button" class="btn-outline-submit" onclick="showToast('Facebook — wkrótce!')">🔷 Facebook</button>
       <p class="form-note">Nie masz konta? <a onclick="goTo('rejestracja')">Zarejestruj się</a></p>
     </div>
@@ -2676,7 +2666,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
       <div class="fgrp"><label>Pseudonim</label><input id="reg-user" type="text" placeholder="karolinka_sz" onkeydown="if(event.key==='Enter')doRegister()"></div>
       <div class="fgrp"><label>E-mail</label><input id="reg-email" type="email" placeholder="adres@example.pl" onkeydown="if(event.key==='Enter')doRegister()"></div>
       <div class="fgrp"><label>Numer telefonu</label><input id="reg-phone" type="tel" placeholder="+48 500 000 000" onkeydown="if(event.key==='Enter')doRegister()"></div>
-      <div class="fgrp"><label>Hasło</label><div style="position:relative"><input id="reg-pass" type="password" placeholder="Min. 6 znaków" onkeydown="if(event.key==='Enter')doRegister()" style="padding-right:40px;width:100%;box-sizing:border-box"><button type="button" onclick="togglePass('reg-pass',this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--gray-4);font-size:1.1rem;padding:0;line-height:1">👁</button></div></div>
+      <div class="fgrp"><label>Hasło</label><div style="position:relative"><input id="reg-pass" type="password" placeholder="Min. 8 znaków" onkeydown="if(event.key==='Enter')doRegister()" style="padding-right:40px;width:100%;box-sizing:border-box"><button type="button" onclick="togglePass('reg-pass',this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--gray-4);font-size:1.1rem;padding:0;line-height:1">👁</button></div></div>
       <div class="fgrp" style="flex-direction:row;align-items:flex-start;gap:10px">
         <input type="checkbox" id="reg-age" style="margin-top:3px;flex-shrink:0;width:16px;height:16px;accent-color:var(--teal)">
         <label for="reg-age" style="font-size:.8rem;line-height:1.5;font-weight:500;color:var(--gray-5)">
@@ -3848,21 +3838,31 @@ function checkAuthApi() {
 function updateNavForUser(user) {
   var btn = document.querySelector('.btn-login');
   if (!btn) return;
-  btn.textContent = '👤 ' + user.username;
+  if (user.avatar_url) {
+    var _navAvUrl = user.avatar_url.startsWith('/') ? API_BASE + user.avatar_url : user.avatar_url;
+    btn.innerHTML = '<img src="' + esc(_navAvUrl) + '" style="width:28px;height:28px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:6px"> ' + esc(user.username);
+  } else {
+    btn.textContent = '👤 ' + user.username;
+  }
   btn.title = user.email;
   btn.onclick = function() { goToSettings(); };
   var regBtn = document.querySelector('.btn-register');
   if (regBtn) regBtn.style.display = 'none';
   var myOffersBtn = document.getElementById('nav-my-offers');
   if (myOffersBtn) myOffersBtn.style.display = '';
-  // Pokaż dzwonek powiadomień
+  // Pokaż dzwonek powiadomień i pobierz liczbę nieprzeczytanych
   var notifWrap = document.getElementById('notif-wrap');
   if (notifWrap) notifWrap.style.display = '';
+  startNotifPolling();
   // Aktualizuj info w ustawieniach
   var info = document.getElementById('settings-user-info');
+  var _siAvUrl = user.avatar_url ? (user.avatar_url.startsWith('/') ? API_BASE + user.avatar_url : user.avatar_url) : '';
+  var _siAvHtml = _siAvUrl
+    ? '<img src="' + esc(_siAvUrl) + '" style="width:48px;height:48px;border-radius:50%;object-fit:cover">'
+    : esc(user.avatar || user.username[0].toUpperCase());
   if (info) info.innerHTML =
     '<div style="display:flex;align-items:center;gap:12px">' +
-    '<div style="font-size:2rem;width:48px;height:48px;border-radius:50%;background:var(--teal-l);display:flex;align-items:center;justify-content:center">' + esc(user.avatar || user.username[0].toUpperCase()) + '</div>' +
+    '<div style="font-size:2rem;width:48px;height:48px;border-radius:50%;background:var(--teal-l);display:flex;align-items:center;justify-content:center;overflow:hidden">' + _siAvHtml + '</div>' +
     '<div><strong style="font-size:1rem">' + esc(user.username) + '</strong><br>' +
     '<span style="color:var(--gray-4);font-size:.82rem">' + esc(user.email) + '</span><br>' +
     '<span style="font-size:.75rem;color:var(--gray-4)">Dołączyła ' + (user.created_at || '').slice(0,10) + '</span></div></div>';
@@ -3901,7 +3901,8 @@ function toggleSettingsEdit() {
     var prev = document.getElementById('settings-avatar-preview');
     if (prev) {
       if (_currentUser.avatar_url) {
-        prev.innerHTML = '<img src="' + esc(_currentUser.avatar_url) + '" style="width:100%;height:100%;object-fit:cover">';
+        var _avUrl = _currentUser.avatar_url.startsWith('/') ? API_BASE + _currentUser.avatar_url : _currentUser.avatar_url;
+        prev.innerHTML = '<img src="' + esc(_avUrl) + '" style="width:100%;height:100%;object-fit:cover">';
       } else {
         prev.textContent = _currentUser.avatar || (_currentUser.username ? _currentUser.username[0].toUpperCase() : '?');
       }
@@ -3924,9 +3925,10 @@ function uploadAvatarPhoto(input) {
       if (d.error) { showToast('Błąd: ' + d.error); return; }
       // Pokaż podgląd
       var prev = document.getElementById('settings-avatar-preview');
-      if (prev) prev.innerHTML = '<img src="' + esc(d.url) + '" style="width:100%;height:100%;object-fit:cover">';
+      var fullAvatarUrl = d.url.startsWith('/') ? API_BASE + d.url : d.url;
+      if (prev) prev.innerHTML = '<img src="' + esc(fullAvatarUrl) + '" style="width:100%;height:100%;object-fit:cover">';
       // Zapisz URL
-      apiFetch('/api/auth/profile', { method: 'PUT', body: JSON.stringify({ avatar_url: d.url }) })
+      apiFetch('/api/auth/profile', { method: 'PUT', body: JSON.stringify({ avatar_url: fullAvatarUrl }) })
         .then(function(r2) { return r2.json(); })
         .then(function(data) {
           if (data.user) { _currentUser = data.user; updateNavForUser(_currentUser); }
@@ -4003,6 +4005,24 @@ function goTo(p) {
     document.querySelectorAll('#bottom-nav .bottom-nav-btn').forEach(function(btn) {
       btn.setAttribute('aria-current', btn.dataset.page === p ? 'page' : 'false');
     });
+
+    // SEO — dynamiczny tytuł i meta description per podstrona
+    var _pageMeta = {
+      'home':          { t: 'vipciuchy.pl — Moda z Drugiej Ręki | Kup i Sprzedaj', d: 'Polska platforma secondhand. Ponad 4200 ubrań, butów i akcesoriów. Kupuj taniej, sprzedawaj bez prowizji.' },
+      'logowanie':     { t: 'Logowanie — vipciuchy.pl', d: 'Zaloguj się do vipciuchy.pl i zarządzaj swoimi ogłoszeniami oraz ulubionymi.' },
+      'rejestracja':   { t: 'Rejestracja — vipciuchy.pl', d: 'Dołącz do vipciuchy.pl za darmo i zacznij sprzedawać lub kupować modę z drugiej ręki.' },
+      'sprzedaj':      { t: 'Dodaj ogłoszenie — vipciuchy.pl', d: 'Sprzedaj ubrania, buty i akcesoria bez prowizji. Dodaj ogłoszenie w 3 minuty.' },
+      'faq':           { t: 'FAQ — vipciuchy.pl', d: 'Odpowiedzi na najczęstsze pytania dotyczące kupowania i sprzedawania na vipciuchy.pl.' },
+      'kontakt':       { t: 'Kontakt — vipciuchy.pl', d: 'Skontaktuj się z zespołem vipciuchy.pl. Odpowiadamy w ciągu 24 godzin.' },
+      'cennik':        { t: 'Cennik — vipciuchy.pl', d: 'Sprawdź cennik vipciuchy.pl. Sprzedaż bez prowizji dla wszystkich użytkowników.' },
+      'regulamin':     { t: 'Regulamin — vipciuchy.pl', d: 'Regulamin platformy vipciuchy.pl — zasady korzystania z serwisu.' },
+      'jak-sprzedawac':{ t: 'Jak sprzedawać — vipciuchy.pl', d: 'Dowiedz się jak skutecznie sprzedawać ubrania na vipciuchy.pl. Poradnik krok po kroku.' },
+      'ustawienia':    { t: 'Ustawienia konta — vipciuchy.pl', d: 'Zarządzaj swoim profilem, danymi kontaktowymi i preferencjami na vipciuchy.pl.' },
+    };
+    var _meta = _pageMeta[p] || _pageMeta['home'];
+    document.title = _meta.t;
+    var _metaDesc = document.querySelector('meta[name="description"]');
+    if (_metaDesc) _metaDesc.setAttribute('content', _meta.d);
 
     if (p === 'home') {
       if (_apiOnline) loadProductsFromApi(); else renderGrid();
@@ -4481,7 +4501,13 @@ function doRegister() {
   var phone    = (document.getElementById('reg-phone').value || '').trim();
   var password = document.getElementById('reg-pass').value  || '';
   if (!username || !email || !phone || !password) { showToast('Wypełnij wszystkie pola'); return; }
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showToast('Podaj poprawny adres e-mail'); return; }
+  if (username.length < 3) { showToast('Pseudonim musi mieć co najmniej 3 znaki.'); document.getElementById('reg-user').focus(); return; }
+  if (username.length > 30) { showToast('Pseudonim może mieć maksymalnie 30 znaków.'); document.getElementById('reg-user').focus(); return; }
+  if (!/^[a-zA-Z0-9_\-\.]+$/.test(username)) { showToast('Pseudonim może zawierać tylko litery, cyfry, _, - i .'); document.getElementById('reg-user').focus(); return; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showToast('Podaj poprawny adres e-mail.'); document.getElementById('reg-email').focus(); return; }
+  var phoneDigits = phone.replace(/[\s\-\+]/g, '');
+  if (!/^\d{9,12}$/.test(phoneDigits)) { showToast('Podaj poprawny numer telefonu (9–12 cyfr).'); document.getElementById('reg-phone').focus(); return; }
+  if (password.length < 8) { showToast('Hasło musi mieć co najmniej 8 znaków.'); document.getElementById('reg-pass').focus(); return; }
   if (!document.getElementById('reg-age').checked) {
     showToast('Musisz mieć ukończone 18 lat, aby założyć konto.');
     return;
@@ -4552,6 +4578,7 @@ function doLogout() {
     if (myOffersBtn) myOffersBtn.style.display = 'none';
     var notifWrap = document.getElementById('notif-wrap');
     if (notifWrap) notifWrap.style.display = 'none';
+    stopNotifPolling();
     showToast('Wylogowano.');
     goTo('home');
   });
@@ -4627,14 +4654,20 @@ function doSell() {
   var cond  = document.getElementById('sell-cond').value;
   var cat = document.getElementById('sell-cat') ? document.getElementById('sell-cat').value : '';
   var desc  = (document.getElementById('sell-desc').value  || '').trim();
-  if (!name || !brand) { showToast('Uzupełnij nazwę i markę.'); return; }
-  if (!price || isNaN(price) || price <= 0) { showToast('Podaj prawidłową cenę (większą od 0).'); return; }
+  if (!name) { showToast('Podaj nazwę ogłoszenia.'); document.getElementById('sell-name').focus(); return; }
+  if (name.length < 5) { showToast('Nazwa ogłoszenia musi mieć co najmniej 5 znaków.'); document.getElementById('sell-name').focus(); return; }
+  if (!brand) { showToast('Podaj markę produktu.'); document.getElementById('sell-brand').focus(); return; }
+  if (!price || isNaN(price) || price <= 0) { showToast('Podaj prawidłową cenę (większą od 0).'); document.getElementById('sell-price').focus(); return; }
+  if (price > 99999) { showToast('Cena nie może przekraczać 99 999 zł.'); document.getElementById('sell-price').focus(); return; }
+  var sellBtn = document.querySelector('#page-sprzedaj .btn-submit');
+  setButtonLoading(sellBtn, true);
   apiFetch('/api/products', {
     method: 'POST',
     body: JSON.stringify({ name: name, brand: brand, price: price, size: size, condition: cond, description: desc, images: _uploadedUrls, category: cat })
   })
     .then(function(r) { return r.json(); })
     .then(function(data) {
+      setButtonLoading(sellBtn, false);
       if (data.error) { showToast('Błąd: ' + data.error); return; }
       plausible('Listing Created', { props: { brand: brand, price: price } });
       showToast('Ogłoszenie opublikowane! ✅');
@@ -4645,7 +4678,7 @@ function doSell() {
       loadProductsFromApi();
       goTo('home');
     })
-    .catch(function() { showToast('Błąd połączenia z serwerem.'); });
+    .catch(function() { setButtonLoading(sellBtn, false); showToast('Błąd połączenia z serwerem.'); });
 }
 
 /* ══ UI ════════════════════════════════════════════════════════ */
@@ -4691,7 +4724,8 @@ function openSeller(name, av, stars, count, sellerId) {
           // Avatar — zdjęcie profilowe lub emoji/inicjał
           var avEl = document.getElementById('seller-av-big');
           if (u.avatar_url) {
-            avEl.innerHTML = '<img src="' + esc(u.avatar_url) + '" style="width:72px;height:72px;border-radius:50%;object-fit:cover">';
+            var _sAvUrl = u.avatar_url.startsWith('/') ? API_BASE + u.avatar_url : u.avatar_url;
+            avEl.innerHTML = '<img src="' + esc(_sAvUrl) + '" style="width:72px;height:72px;border-radius:50%;object-fit:cover">';
           } else {
             avEl.textContent = u.avatar || name[0].toUpperCase();
           }
@@ -5308,10 +5342,92 @@ function closeMobileMenu() {
 }
 
 /* ══ POWIADOMIENIA ══════════════════════════════════════════════ */
+var _notifPollTimer = null;
+
+function loadUnreadCount() {
+  if (!_currentUser || !_apiOnline) return;
+  apiFetch('/api/messages/unread-count')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.error) return;
+      var badge = document.getElementById('notif-badge');
+      if (!badge) return;
+      var n = data.unread || 0;
+      if (n > 0) {
+        badge.textContent = n > 9 ? '9+' : String(n);
+        badge.style.display = '';
+      } else {
+        badge.style.display = 'none';
+      }
+    })
+    .catch(function() {});
+}
+
+function startNotifPolling() {
+  loadUnreadCount();
+  if (_notifPollTimer) clearInterval(_notifPollTimer);
+  _notifPollTimer = setInterval(loadUnreadCount, 60000); // co minutę
+}
+
+function stopNotifPolling() {
+  if (_notifPollTimer) { clearInterval(_notifPollTimer); _notifPollTimer = null; }
+}
+
+function _timeAgo(dateStr) {
+  if (!dateStr) return '';
+  var d = new Date(dateStr.replace(' ', 'T'));
+  var diff = Math.floor((Date.now() - d.getTime()) / 1000);
+  if (diff < 60)  return 'przed chwilą';
+  if (diff < 3600) return Math.floor(diff/60) + ' min temu';
+  if (diff < 86400) return Math.floor(diff/3600) + ' godz. temu';
+  return Math.floor(diff/86400) + ' dni temu';
+}
+
+function loadNotifMessages() {
+  var list = document.getElementById('notif-list');
+  if (!list || !_apiOnline) return;
+  apiFetch('/api/messages/conversations')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      var convs = Array.isArray(data.conversations) ? data.conversations : [];
+      if (!convs.length) {
+        list.innerHTML = '<div style="padding:16px;text-align:center;color:var(--gray-4);font-size:.82rem">Brak wiadomości</div>';
+        return;
+      }
+      var html = '';
+      convs.slice(0, 5).forEach(function(c) {
+        var dot = c.unread_count > 0
+          ? '<div class="notif-dot"></div>'
+          : '<div class="notif-dot" style="background:var(--gray-3)"></div>';
+        var msg = c.last_message || '';
+        var preview = msg.length > 50 ? esc(msg.slice(0, 50)) + '…' : esc(msg || '—');
+        var username = (c.other_user && c.other_user.username) ? c.other_user.username : 'Użytkownik';
+        var otherId = (c.other_user && c.other_user.id) ? c.other_user.id : 0;
+        var time = c.last_at ? _timeAgo(c.last_at) : '';
+        html += '<div class="notif-item" onclick="openChatWith(' + otherId + ')">' +
+          dot +
+          '<div><div class="notif-text">' + esc(username) + ': „' + preview + '"</div>' +
+          '<div class="notif-time">' + time + '</div></div></div>';
+      });
+      list.innerHTML = html;
+    })
+    .catch(function() {
+      list.innerHTML = '<div style="padding:16px;text-align:center;color:var(--gray-4);font-size:.82rem">Błąd ładowania</div>';
+    });
+}
+
+function openChatWith(userId) {
+  var dd = document.getElementById('notif-dropdown');
+  if (dd) dd.classList.remove('open');
+  goTo('chat');
+}
+
 function toggleNotif() {
   var dd = document.getElementById('notif-dropdown');
   if (!dd) return;
+  var isOpening = !dd.classList.contains('open');
   dd.classList.toggle('open');
+  if (isOpening) loadNotifMessages();
 }
 function clearNotif() {
   var badge = document.getElementById('notif-badge');
@@ -5694,13 +5810,15 @@ function saveEditProduct() {
   var size   = document.getElementById('edit-size').value;
   var cond   = document.getElementById('edit-cond').value;
   var desc   = document.getElementById('edit-desc').value.trim();
+  var catEl  = document.getElementById('edit-cat');
+  var cat    = catEl ? catEl.value : '';
   var statusEl = document.querySelector('input[name="edit-status"]:checked');
   var status = statusEl ? statusEl.value : 'available';
   if (!name || !brand || !price) { showToast('Wypełnij nazwę, markę i cenę.'); return; }
   if (!_apiOnline) { showToast('Backend offline.'); return; }
   apiFetch('/api/products/' + pid, {
     method: 'PUT',
-    body: JSON.stringify({ name: name, brand: brand, price: price, size: size, condition: cond, description: desc, images: _editImages })
+    body: JSON.stringify({ name: name, brand: brand, price: price, size: size, condition: cond, description: desc, images: _editImages, category: cat })
   })
   .then(function(r) { return r.json(); })
   .then(function(data) {

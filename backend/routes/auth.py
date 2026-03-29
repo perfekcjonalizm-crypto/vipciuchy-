@@ -61,8 +61,8 @@ def register():
         return jsonify({"error": "Wypełnij wszystkie pola."}), 400
     if len(username) < 3:
         return jsonify({"error": "Nazwa użytkownika min. 3 znaki."}), 400
-    if len(password) < 6:
-        return jsonify({"error": "Hasło min. 6 znaków."}), 400
+    if len(password) < 8:
+        return jsonify({"error": "Hasło min. 8 znaków."}), 400
     if "@" not in email:
         return jsonify({"error": "Niepoprawny e-mail."}), 400
     if len(phone) < 9:
@@ -352,8 +352,8 @@ def reset_password():
 
     if not email or not code or not new_password:
         return jsonify({"error": "Wypełnij wszystkie pola."}), 400
-    if len(new_password) < 6:
-        return jsonify({"error": "Hasło musi mieć co najmniej 6 znaków."}), 400
+    if len(new_password) < 8:
+        return jsonify({"error": "Hasło musi mieć co najmniej 8 znaków."}), 400
 
     now  = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     conn = get_db()
