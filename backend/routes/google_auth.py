@@ -13,7 +13,7 @@ google_auth_bp = Blueprint("google_auth", __name__, url_prefix="/api/auth/google
 
 GOOGLE_CLIENT_ID     = os.environ.get("GOOGLE_CLIENT_ID", "")
 GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", "")
-GOOGLE_REDIRECT_URI  = "https://vipciuchy-production.up.railway.app/api/auth/google/callback"
+GOOGLE_REDIRECT_URI  = os.environ.get("GOOGLE_REDIRECT_URI", "https://api.vipciuchy.pl/api/auth/google/callback")
 FRONTEND_URL         = "https://vipciuchy.pl"
 
 
