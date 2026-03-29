@@ -425,6 +425,7 @@ def update_product(pid):
         desc  = (data.get("description") or prod["description"] or "").strip()
         emoji = (data.get("emoji") or prod["emoji"] or "👗").strip()
         images = json.dumps(data.get("images")) if "images" in data else prod["images"]
+        category = (data.get("category") or prod.get("category") or "").strip()[:50]
 
         try:
             price = float(price)
@@ -434,8 +435,8 @@ def update_product(pid):
             return jsonify({"error": "Cena musi być liczbą większą od 0."}), 400
 
         conn.execute(
-            "UPDATE products SET name=?, brand=?, price=?, size=?, condition=?, description=?, emoji=?, images=? WHERE id=?",
-            (name, brand, price, size, cond, desc, emoji, images, pid)
+            "UPDATE products SET name=?, brand=?, price=?, size=?, condition=?, description=?, emoji=?, images=?, category=? WHERE id=?",
+            (name, brand, price, size, cond, desc, emoji, images, category, pid)
         )
         conn.commit()
         row = conn.execute(
