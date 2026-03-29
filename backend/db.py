@@ -164,6 +164,7 @@ def init_db():
     if "flag_reason" not in prod_cols: conn.execute("ALTER TABLE products ADD COLUMN flag_reason TEXT DEFAULT ''")
     if "status"    not in prod_cols: conn.execute("ALTER TABLE products ADD COLUMN status TEXT DEFAULT 'available'")
     if "is_hidden" not in prod_cols: conn.execute("ALTER TABLE products ADD COLUMN is_hidden INTEGER DEFAULT 0")
+    if "category"  not in prod_cols: conn.execute("ALTER TABLE products ADD COLUMN category TEXT DEFAULT ''")
     conn.commit()
 
     msg_cols = [r[1] for r in conn.execute("PRAGMA table_info(messages)").fetchall()]
