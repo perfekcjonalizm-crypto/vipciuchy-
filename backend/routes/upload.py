@@ -15,7 +15,7 @@ cloudinary.config(
     secure     = True,
 )
 
-ALLOWED_EXT = {"jpg", "jpeg", "png", "webp"}
+ALLOWED_EXT = {"jpg", "jpeg", "png", "webp", "heic", "heif"}
 MAX_SIZE    = 5 * 1024 * 1024  # 5 MB
 
 
@@ -35,7 +35,7 @@ def upload_file():
     if not file.filename:
         return jsonify({"error": "Nie wybrano pliku."}), 400
     if not _allowed(file.filename):
-        return jsonify({"error": "Dozwolone formaty: JPG, PNG, WEBP."}), 400
+        return jsonify({"error": "Dozwolone formaty: JPG, PNG, WEBP, HEIC."}), 400
 
     file.seek(0, 2)
     size = file.tell()
