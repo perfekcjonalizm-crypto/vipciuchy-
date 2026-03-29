@@ -2560,6 +2560,10 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
         <button type="button" class="prod-btn-chat" style="background:var(--amber-l);border-color:var(--amber);color:var(--gray-6)" onclick="doProposePriceModal()">💰 Zaproponuj cenę</button>
         <button type="button" class="prod-btn-share" onclick="shareProduct()">🔗 Udostępnij</button>
         <button type="button" id="pd-report-btn" class="prod-btn-chat" style="background:#fff5f5;border-color:#e53e3e;color:#e53e3e;display:none" onclick="openReportModal('product')">🚩 Zgłoś ofertę</button>
+        <div id="pd-shipping-info" style="display:none;margin:14px 0;padding:12px 14px;background:var(--gray-0);border-radius:12px;border:1.5px solid var(--gray-2)">
+          <div style="font-size:.72rem;font-weight:700;color:var(--gray-5);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">📦 Dostępne metody wysyłki</div>
+          <div id="pd-shipping-badges" style="display:flex;flex-wrap:wrap;gap:6px"></div>
+        </div>
         <div class="prod-desc"><h3>Opis</h3><p id="pd-desc">Opis produktu.</p></div>
       </div>
     </div>
@@ -2716,9 +2720,36 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
       <div class="fgrp"><label>Opis szczegółowy</label><textarea id="sell-desc" placeholder="Stan, kolor, wymiary, materiał…"></textarea></div>
     </div>
     <div class="sp-card"><h2>Cena i wysyłka</h2>
-      <div class="sell-grid-2">
-        <div class="fgrp"><label>Cena (zł)</label><input id="sell-price" type="number" placeholder="89" min="1"></div>
-        <div class="fgrp"><label>Wysyłka</label><select><option>InPost paczkomat</option><option>DPD kurier</option><option>Poczta Polska</option><option>Odbiór osobisty</option></select></div>
+      <div class="fgrp"><label>Cena (zł)</label><input id="sell-price" type="number" placeholder="89" min="1" style="max-width:180px"></div>
+      <div class="fgrp">
+        <label>Oferowane metody wysyłki</label>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:10px 12px;border:1.5px solid var(--gray-2);border-radius:10px;font-size:.84rem;font-weight:600;color:var(--gray-6);transition:border-color .15s"
+                 onmouseover="this.style.borderColor='var(--teal)'" onmouseout="this.style.borderColor=this.querySelector('input').checked?'var(--teal)':'var(--gray-2)'">
+            <input type="checkbox" id="ship-inpost" value="inpost_paczkomat" style="accent-color:var(--teal);width:15px;height:15px;flex-shrink:0">
+            📦 InPost Paczkomat
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:10px 12px;border:1.5px solid var(--gray-2);border-radius:10px;font-size:.84rem;font-weight:600;color:var(--gray-6);transition:border-color .15s"
+                 onmouseover="this.style.borderColor='var(--teal)'" onmouseout="this.style.borderColor=this.querySelector('input').checked?'var(--teal)':'var(--gray-2)'">
+            <input type="checkbox" id="ship-kurier" value="inpost_kurier" style="accent-color:var(--teal);width:15px;height:15px;flex-shrink:0">
+            🚚 InPost Kurier
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:10px 12px;border:1.5px solid var(--gray-2);border-radius:10px;font-size:.84rem;font-weight:600;color:var(--gray-6);transition:border-color .15s"
+                 onmouseover="this.style.borderColor='var(--teal)'" onmouseout="this.style.borderColor=this.querySelector('input').checked?'var(--teal)':'var(--gray-2)'">
+            <input type="checkbox" id="ship-dpd" value="dpd" style="accent-color:var(--teal);width:15px;height:15px;flex-shrink:0">
+            🔴 DPD Kurier
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:10px 12px;border:1.5px solid var(--gray-2);border-radius:10px;font-size:.84rem;font-weight:600;color:var(--gray-6);transition:border-color .15s"
+                 onmouseover="this.style.borderColor='var(--teal)'" onmouseout="this.style.borderColor=this.querySelector('input').checked?'var(--teal)':'var(--gray-2)'">
+            <input type="checkbox" id="ship-poczta" value="poczta" style="accent-color:var(--teal);width:15px;height:15px;flex-shrink:0">
+            📮 Poczta Polska
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:10px 12px;border:1.5px solid var(--gray-2);border-radius:10px;font-size:.84rem;font-weight:600;color:var(--gray-6);transition:border-color .15s;grid-column:span 2"
+                 onmouseover="this.style.borderColor='var(--teal)'" onmouseout="this.style.borderColor=this.querySelector('input').checked?'var(--teal)':'var(--gray-2)'">
+            <input type="checkbox" id="ship-osobisty" value="osobisty" style="accent-color:var(--teal);width:15px;height:15px;flex-shrink:0">
+            🤝 Odbiór osobisty (bezpłatnie)
+          </label>
+        </div>
       </div>
       <button type="button" class="btn-submit" onclick="doSell()">Opublikuj ogłoszenie</button>
     </div>
@@ -3008,8 +3039,95 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
       <span class="connect-badge secure" style="background:rgba(9,179,160,.12);color:var(--teal);border-color:rgba(9,179,160,.3)">✓ Bezpieczna transakcja</span>
     </div>
 
-    <!-- ─── Wybór metody płatności ───────────────────────────────── -->
-    <div class="pay-step active" id="ps-shipping">
+    <!-- ─── Krok 1: Wybór wysyłki ──────────────────────────────── -->
+    <div class="pay-step active" id="ps-delivery">
+      <p style="font-size:.82rem;font-weight:700;color:var(--gray-5);margin-bottom:12px">Jak ma dojść paczka?</p>
+
+      <!-- Karty kurierów -->
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px" id="carrier-grid">
+        <div class="carrier-card" onclick="selectCarrier(this,'inpost_paczkomat')">
+          <div class="carrier-card-icon">📦</div>
+          <div class="carrier-card-name">InPost Paczkomat</div>
+          <div class="carrier-card-desc">Odbiór 24/7</div>
+          <div class="carrier-card-price">od 10,99 zł</div>
+        </div>
+        <div class="carrier-card" onclick="selectCarrier(this,'inpost_kurier')">
+          <div class="carrier-card-icon">🚚</div>
+          <div class="carrier-card-name">InPost Kurier</div>
+          <div class="carrier-card-desc">Dostawa do drzwi</div>
+          <div class="carrier-card-price">od 14,99 zł</div>
+        </div>
+        <div class="carrier-card" onclick="selectCarrier(this,'dpd')">
+          <div class="carrier-card-icon">🔴</div>
+          <div class="carrier-card-name">DPD Kurier</div>
+          <div class="carrier-card-desc">Dostawa kurierem</div>
+          <div class="carrier-card-price">od 13,99 zł</div>
+        </div>
+        <div class="carrier-card" onclick="selectCarrier(this,'poczta')">
+          <div class="carrier-card-icon">📮</div>
+          <div class="carrier-card-name">Poczta Polska</div>
+          <div class="carrier-card-desc">Paczka ekonomiczna</div>
+          <div class="carrier-card-price">od 8,50 zł</div>
+        </div>
+        <div class="carrier-card" onclick="selectCarrier(this,'orlen')" style="grid-column:span 2">
+          <div class="carrier-card-icon">⛽</div>
+          <div class="carrier-card-name">Orlen Paczka</div>
+          <div class="carrier-card-desc">Odbiór na stacji Orlen · od 8,99 zł</div>
+        </div>
+      </div>
+
+      <!-- Wybór rozmiaru paczki -->
+      <div id="size-section" style="display:none;margin-bottom:12px">
+        <div style="font-size:.75rem;font-weight:700;color:var(--gray-5);margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em">Rozmiar paczki</div>
+        <div id="size-btns" style="display:flex;flex-direction:column;gap:6px"></div>
+      </div>
+
+      <!-- Wyszukiwanie paczkomatu / punktu Orlen -->
+      <div id="point-section" style="display:none;margin-bottom:12px">
+        <div style="font-size:.75rem;font-weight:700;color:var(--gray-5);margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em">Wybierz punkt odbioru</div>
+        <div style="display:flex;gap:8px;margin-bottom:8px">
+          <input id="point-city-input" type="text" placeholder="Wpisz miasto…"
+            style="flex:1;padding:9px 12px;border:1.5px solid var(--gray-2);border-radius:10px;font-size:.82rem;font-family:inherit;outline:none;min-width:0"
+            onkeydown="if(event.key==='Enter')searchPoints()">
+          <button type="button" class="point-search-btn" onclick="searchPoints()"
+            style="padding:9px 14px;background:var(--teal);color:#fff;border:none;border-radius:10px;font-weight:700;font-size:.82rem;cursor:pointer;font-family:inherit;white-space:nowrap">Szukaj</button>
+        </div>
+        <div id="points-list" style="display:none;max-height:160px;overflow-y:auto;border:1.5px solid var(--gray-2);border-radius:10px"></div>
+      </div>
+
+      <!-- Adres dostawy (kurier) -->
+      <div id="recipient-section" style="display:none;margin-bottom:12px">
+        <div style="font-size:.75rem;font-weight:700;color:var(--gray-5);margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em">Adres dostawy</div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <input id="rec-name"    type="text" placeholder="Imię i nazwisko"    style="padding:9px 12px;border:1.5px solid var(--gray-2);border-radius:10px;font-size:.82rem;font-family:inherit;outline:none" oninput="_updateShippingNextBtn()">
+          <input id="rec-phone"   type="tel"  placeholder="Telefon"             style="padding:9px 12px;border:1.5px solid var(--gray-2);border-radius:10px;font-size:.82rem;font-family:inherit;outline:none">
+          <input id="rec-address" type="text" placeholder="Ulica i numer"      style="padding:9px 12px;border:1.5px solid var(--gray-2);border-radius:10px;font-size:.82rem;font-family:inherit;outline:none" oninput="_updateShippingNextBtn()">
+          <div style="display:grid;grid-template-columns:100px 1fr;gap:7px">
+            <input id="rec-postal" type="text" placeholder="Kod pocztowy" style="padding:9px 12px;border:1.5px solid var(--gray-2);border-radius:10px;font-size:.82rem;font-family:inherit;outline:none">
+            <input id="rec-city"   type="text" placeholder="Miasto"       style="padding:9px 12px;border:1.5px solid var(--gray-2);border-radius:10px;font-size:.82rem;font-family:inherit;outline:none">
+          </div>
+        </div>
+      </div>
+
+      <!-- Podsumowanie kosztów -->
+      <div id="shipping-summary" style="display:none;background:var(--gray-0);border-radius:var(--r-md);padding:11px 14px;margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;font-size:.78rem;color:var(--gray-5);margin-bottom:3px"><span>Produkt</span><span id="st-product">—</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:.78rem;color:var(--gray-5);margin-bottom:6px"><span>Wysyłka</span><span id="st-shipping">—</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:.88rem;font-weight:800;color:var(--gray-6);border-top:1px solid var(--gray-2);padding-top:6px"><span>Łącznie</span><span id="st-total">—</span></div>
+      </div>
+
+      <button type="button" id="shipping-next-btn" disabled onclick="goPayStep('shipping')"
+        style="width:100%;padding:14px;background:var(--teal);color:#fff;border:none;border-radius:var(--r-md);font-weight:800;font-size:.9rem;cursor:pointer;font-family:inherit;opacity:.4;transition:opacity .2s">
+        Dalej — Wybierz płatność →
+      </button>
+    </div>
+
+    <!-- ─── Krok 2: Wybór metody płatności ───────────────────────── -->
+    <div class="pay-step" id="ps-shipping">
+      <button type="button" onclick="goPayStep('delivery')"
+        style="display:inline-flex;align-items:center;gap:5px;background:none;border:none;font-size:.8rem;font-weight:700;color:var(--gray-4);cursor:pointer;padding:0;margin-bottom:14px">
+        ← Wróć do wysyłki
+      </button>
       <p style="font-size:.82rem;font-weight:700;color:var(--gray-5);margin-bottom:14px">
         Jak chcesz zapłacić?
       </p>
@@ -4164,6 +4282,24 @@ function openProd(i) {
 
   document.getElementById('pd-buy').onclick = function() { openPayM(i); };
 
+  // Metody wysyłki
+  var shipInfo    = document.getElementById('pd-shipping-info');
+  var shipBadges  = document.getElementById('pd-shipping-badges');
+  var shipLabels  = { inpost_paczkomat:'📦 InPost Paczkomat', inpost_kurier:'🚚 InPost Kurier', dpd:'🔴 DPD', poczta:'📮 Poczta Polska', orlen:'⛽ Orlen Paczka', osobisty:'🤝 Odbiór osobisty' };
+  if (shipInfo && shipBadges && p.shipping_methods) {
+    var methods = p.shipping_methods.split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+    if (methods.length) {
+      shipBadges.innerHTML = methods.map(function(m) {
+        return '<span style="padding:4px 10px;background:#fff;border:1.5px solid var(--gray-2);border-radius:20px;font-size:.76rem;font-weight:600;color:var(--gray-5)">' + (shipLabels[m] || m) + '</span>';
+      }).join('');
+      shipInfo.style.display = '';
+    } else {
+      shipInfo.style.display = 'none';
+    }
+  } else if (shipInfo) {
+    shipInfo.style.display = 'none';
+  }
+
   _currentProductIdx = i;
   _updatePdCartBtn();
 
@@ -4291,8 +4427,17 @@ function openPayM(i) {
   var phoneEl = document.getElementById('seller-phone-display');
   if (phoneEl) phoneEl.textContent = '+' + (p.phone || '48 000 000 000');
 
-  // Reset do kroku wysyłki
-  goPayStep('shipping');
+  // Reset wyboru wysyłki
+  _selectedCarrier = null; _selectedSize = null; _selectedPointId = null; _selectedPointName = null; _shippingPrice = 0;
+  document.querySelectorAll('.carrier-card').forEach(function(c){ c.classList.remove('selected'); });
+  var sizeSection = document.getElementById('size-section'); if (sizeSection) sizeSection.style.display = 'none';
+  var pointSection = document.getElementById('point-section'); if (pointSection) pointSection.style.display = 'none';
+  var recipientSection = document.getElementById('recipient-section'); if (recipientSection) recipientSection.style.display = 'none';
+  var pointsList = document.getElementById('points-list'); if (pointsList) pointsList.style.display = 'none';
+  var shippingSummary = document.getElementById('shipping-summary'); if (shippingSummary) shippingSummary.style.display = 'none';
+  var nextBtn = document.getElementById('shipping-next-btn'); if (nextBtn) nextBtn.disabled = true;
+
+  goPayStep('delivery');
   document.getElementById('payM').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
@@ -4301,8 +4446,40 @@ function openBuy(e, i) { e.stopPropagation(); openPayM(i); }
 
 /* ── BLIK na telefon — P2P ── */
 function confirmBlikP2P() {
-  goPayStep('success');
-  showToast('Płatność potwierdzona! Sprzedający wyśle paczkę wkrótce. 📦');
+  if (!_currentProduct || !_currentProduct.id) { goPayStep('success'); return; }
+  if (!_apiOnline) { goPayStep('success'); showToast('Płatność potwierdzona! 📦'); return; }
+
+  var btn = document.querySelector('#ps-blik .pay-confirm-btn');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Zapisywanie…'; }
+
+  var shippingData = _getShippingData();
+  apiFetch('/api/orders', {
+    method: 'POST',
+    body: JSON.stringify({
+      product_id:         _currentProduct.id,
+      payment_method:     'blik',
+      shipping_carrier:   shippingData.shipping_carrier,
+      shipping_service:   shippingData.shipping_service,
+      shipping_point_id:  shippingData.shipping_point_id,
+      shipping_amount:    shippingData.shipping_amount,
+      shipping_recipient: shippingData.shipping_recipient,
+    })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (btn) { btn.disabled = false; btn.textContent = 'Potwierdzam — wysłałem BLIK'; }
+    if (data.error) { showToast('Błąd: ' + data.error); return; }
+    plausible('Purchase Completed', { props: { carrier: shippingData.shipping_carrier, amount: _currentProduct.price } });
+    goPayStep('success');
+    // Odśwież listę produktów (ten już sprzedany)
+    if (typeof loadProductsFromApi === 'function') loadProductsFromApi();
+  })
+  .catch(function() {
+    if (btn) { btn.disabled = false; btn.textContent = 'Potwierdzam — wysłałem BLIK'; }
+    // Nie blokuj UX przy błędzie sieci — przejdź do sukcesu
+    goPayStep('success');
+    showToast('Płatność potwierdzona! 📦');
+  });
 }
 
 function copySellerPhone() {
@@ -4654,16 +4831,21 @@ function doSell() {
   var cond  = document.getElementById('sell-cond').value;
   var cat = document.getElementById('sell-cat') ? document.getElementById('sell-cat').value : '';
   var desc  = (document.getElementById('sell-desc').value  || '').trim();
+  // Zbierz zaznaczone metody wysyłki
+  var shipMethods = ['ship-inpost','ship-kurier','ship-dpd','ship-poczta','ship-osobisty']
+    .map(function(id){ var el=document.getElementById(id); return (el && el.checked) ? el.value : null; })
+    .filter(Boolean);
   if (!name) { showToast('Podaj nazwę ogłoszenia.'); document.getElementById('sell-name').focus(); return; }
   if (name.length < 5) { showToast('Nazwa ogłoszenia musi mieć co najmniej 5 znaków.'); document.getElementById('sell-name').focus(); return; }
   if (!brand) { showToast('Podaj markę produktu.'); document.getElementById('sell-brand').focus(); return; }
   if (!price || isNaN(price) || price <= 0) { showToast('Podaj prawidłową cenę (większą od 0).'); document.getElementById('sell-price').focus(); return; }
   if (price > 99999) { showToast('Cena nie może przekraczać 99 999 zł.'); document.getElementById('sell-price').focus(); return; }
+  if (!shipMethods.length) { showToast('Zaznacz co najmniej jedną metodę wysyłki.'); return; }
   var sellBtn = document.querySelector('#page-sprzedaj .btn-submit');
   setButtonLoading(sellBtn, true);
   apiFetch('/api/products', {
     method: 'POST',
-    body: JSON.stringify({ name: name, brand: brand, price: price, size: size, condition: cond, description: desc, images: _uploadedUrls, category: cat })
+    body: JSON.stringify({ name: name, brand: brand, price: price, size: size, condition: cond, description: desc, images: _uploadedUrls, category: cat, shipping_methods: shipMethods.join(',') })
   })
     .then(function(r) { return r.json(); })
     .then(function(data) {
@@ -4673,6 +4855,7 @@ function doSell() {
       showToast('Ogłoszenie opublikowane! ✅');
       // Reset formularza
       ['sell-name','sell-brand','sell-price','sell-desc'].forEach(function(id){ var el=document.getElementById(id); if(el) el.value=''; });
+      ['ship-inpost','ship-kurier','ship-dpd','ship-poczta','ship-osobisty'].forEach(function(id){ var el=document.getElementById(id); if(el) el.checked=false; });
       document.getElementById('upload-previews').innerHTML = '';
       _uploadedUrls = [];
       loadProductsFromApi();
@@ -6084,9 +6267,11 @@ function _updateShippingNextBtn() {
   if (ok && !CARRIER_REQUIRES_POINT[_selectedCarrier]) {
     var rn = document.getElementById('rec-name');
     var ra = document.getElementById('rec-address');
-    ok = ok && rn && rn.value.trim() && ra && ra.value.trim();
+    ok = !!(ok && rn && rn.value.trim() && ra && ra.value.trim());
   }
   btn.disabled = !ok;
+  btn.style.opacity = ok ? '1' : '.4';
+  btn.style.cursor  = ok ? 'pointer' : 'not-allowed';
 }
 
 function _updateShippingTotal() {
@@ -6767,11 +6952,20 @@ function apiPost(url, data) {
     </p>
     <label style="font-size:.78rem;font-weight:700;color:var(--gray-5);display:block;margin-bottom:6px">Numer śledzenia (opcjonalnie)</label>
     <div style="display:flex;gap:8px">
-      <input type="text" id="shipping-tracking" class="tracking-input" placeholder="np. 00123456789012345678">
+      <input type="text" id="shipping-tracking" class="tracking-input" placeholder="np. 00123456789012345678" style="flex:1">
     </div>
-    <div style="display:flex;gap:10px;margin-top:18px">
+    <!-- Generowanie etykiety InPost -->
+    <div style="margin-top:14px;padding:12px;background:var(--gray-0);border-radius:12px;border:1.5px dashed var(--gray-2)">
+      <div style="font-size:.75rem;font-weight:700;color:var(--gray-5);margin-bottom:8px;text-transform:uppercase;letter-spacing:.04em">🖨️ Automatyczna etykieta</div>
+      <p style="font-size:.78rem;color:var(--gray-4);margin:0 0 10px;line-height:1.5">Wygeneruj etykietę InPost automatycznie — pobierz PDF i nadaj paczkę.</p>
+      <button type="button" onclick="generateLabel(_shippingOrderId)"
+        style="width:100%;padding:9px;background:var(--navy);color:#fff;border:none;border-radius:10px;font-size:.82rem;font-weight:700;cursor:pointer;font-family:inherit">
+        📦 Generuj etykietę InPost
+      </button>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:14px">
       <button type="button" onclick="closeShippingModal()" class="order-action-btn cancel" style="flex:1">Anuluj</button>
-      <button type="button" onclick="submitShipping()" class="order-action-btn ship" style="flex:1">Potwierdź wysyłkę</button>
+      <button type="button" onclick="submitShipping()" class="order-action-btn ship" style="flex:1">✅ Potwierdź wysyłkę</button>
     </div>
   </div>
 </div>

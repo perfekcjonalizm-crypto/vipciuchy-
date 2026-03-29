@@ -44,8 +44,9 @@ def _prod_dict(row):
         "is_sold":     bool(row["is_sold"]),
         "status":    row["status"]    if "status"    in row.keys() else ("sold" if row["is_sold"] else "available"),
         "is_hidden": bool(row["is_hidden"]) if "is_hidden" in row.keys() else False,
-        "category":  row["category"] if "category" in row.keys() else "",
-        "created_at":  row["created_at"],
+        "category":         row["category"]         if "category"         in row.keys() else "",
+        "shipping_methods": row["shipping_methods"] if "shipping_methods" in row.keys() else "",
+        "created_at":       row["created_at"],
     }
 
 
@@ -272,7 +273,8 @@ def create_product():
     emoji  = (data.get("emoji") or "👗").strip()
     desc   = (data.get("description") or "").strip()
     images   = json.dumps(data.get("images") or [])
-    category = (data.get("category") or "").strip()[:50]
+    category         = (data.get("category") or "").strip()[:50]
+    shipping_methods = (data.get("shipping_methods") or "").strip()[:200]
 
     if not name or not brand:
         return jsonify({"error": "Nazwa i marka są wymagane."}), 400
@@ -299,8 +301,8 @@ def create_product():
             return jsonify({"error": "Możesz mieć maksymalnie 20 aktywnych ofert."}), 400
 
         cur = conn.execute(
-            "INSERT INTO products (name,brand,price,size,condition,emoji,description,images,seller_id,status,is_hidden,category) VALUES (?,?,?,?,?,?,?,?,?,'available',0,?)",
-            (name, brand, price, size, cond, emoji, desc, images, uid, category)
+            "INSERT INTO products (name,brand,price,size,condition,emoji,description,images,seller_id,status,is_hidden,category,shipping_methods) VALUES (?,?,?,?,?,?,?,?,?,'available',0,?,?)",
+            (name, brand, price, size, cond, emoji, desc, images, uid, category, shipping_methods)
         )
         conn.commit()
         new_id = cur.lastrowid
