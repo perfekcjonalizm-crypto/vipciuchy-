@@ -3,6 +3,7 @@ routes/google_auth.py — logowanie przez Google OAuth 2.0
 """
 import os
 import secrets
+import logging
 import requests as _requests
 from flask import Blueprint, request, jsonify, session, redirect
 from db import get_db
@@ -11,19 +12,27 @@ from urllib.parse import urlencode
 
 google_auth_bp = Blueprint("google_auth", __name__, url_prefix="/api/auth/google")
 
-GOOGLE_CLIENT_ID     = os.environ.get("GOOGLE_CLIENT_ID", "")
-GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", "")
-GOOGLE_REDIRECT_URI  = os.environ.get("GOOGLE_REDIRECT_URI", "https://api.vipciuchy.pl/api/auth/google/callback")
-FRONTEND_URL         = "https://vipciuchy.pl"
+FRONTEND_URL = "https://vipciuchy.pl"
+
+
+def _cfg():
+    """Odczytaj zmienne środowiskowe w czasie żądania (nie przy starcie modułu)."""
+    return (
+        os.environ.get("GOOGLE_CLIENT_ID", "").strip(),
+        os.environ.get("GOOGLE_CLIENT_SECRET", "").strip(),
+        os.environ.get("GOOGLE_REDIRECT_URI", "https://api.vipciuchy.pl/api/auth/google/callback").strip(),
+    )
 
 
 @google_auth_bp.get("/login")
 def google_login():
+    client_id, client_secret, redirect_uri = _cfg()
+    logging.info(f"[google] login — client_id={client_id[:20]}... redirect_uri={redirect_uri}")
     state = secrets.token_urlsafe(16)
     session["oauth_state"] = state
     params = {
-        "client_id":     GOOGLE_CLIENT_ID,
-        "redirect_uri":  GOOGLE_REDIRECT_URI,
+        "client_id":     client_id,
+        "redirect_uri":  redirect_uri,
         "response_type": "code",
         "scope":         "openid email profile",
         "state":         state,
@@ -35,29 +44,35 @@ def google_login():
 
 @google_auth_bp.get("/callback")
 def google_callback():
+    client_id, client_secret, redirect_uri = _cfg()
     code  = request.args.get("code")
     state = request.args.get("state")
+    g_error = request.args.get("error", "")
+    g_desc  = request.args.get("error_description", "")
+
+    logging.error(f"[google] callback — code={'yes' if code else 'no'} error={g_error!r} desc={g_desc!r}")
 
     if not code:
-        return redirect(f"{FRONTEND_URL}?error=google_auth_failed")
+        return redirect(f"{FRONTEND_URL}?error=google_auth_failed&g={g_error}")
 
     # Wymień code na token
     token_resp = _requests.post(
         "https://oauth2.googleapis.com/token",
         data={
             "code":          code,
-            "client_id":     GOOGLE_CLIENT_ID,
-            "client_secret": GOOGLE_CLIENT_SECRET,
-            "redirect_uri":  GOOGLE_REDIRECT_URI,
+            "client_id":     client_id,
+            "client_secret": client_secret,
+            "redirect_uri":  redirect_uri,
             "grant_type":    "authorization_code",
         },
         timeout=15,
     )
     token_data = token_resp.json()
     access_token = token_data.get("access_token")
+    logging.error(f"[google] token response keys={list(token_data.keys())} error={token_data.get('error')}")
 
     if not access_token:
-        return redirect(f"{FRONTEND_URL}?error=google_auth_failed")
+        return redirect(f"{FRONTEND_URL}?error=google_auth_failed&g=no_token")
 
     # Pobierz dane użytkownika
     userinfo_resp = _requests.get(
