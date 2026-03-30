@@ -16,18 +16,31 @@ from db import get_db
 furgonetka_bp = Blueprint("furgonetka", __name__, url_prefix="/api/furgonetka")
 log = logging.getLogger(__name__)
 
-FURGONETKA_TOKEN = os.environ.get("FURGONETKA_WEBHOOK_TOKEN", "")
+def _get_token():
+    """Czyta token dynamicznie — Railway może ładować env po starcie."""
+    return os.environ.get("FURGONETKA_WEBHOOK_TOKEN", "")
+
+
+# ── Debug endpoint (usuń po weryfikacji) ─────────────────────────
+@furgonetka_bp.get("/health")
+def health():
+    token = _get_token()
+    return jsonify({
+        "token_set": bool(token),
+        "token_len": len(token),
+        "env_keys":  [k for k in os.environ if "FURG" in k.upper()],
+    })
 
 
 def _auth():
     """Weryfikuje token Furgonetki z nagłówka Authorization: Bearer <token>."""
-    if not FURGONETKA_TOKEN:
-        return False  # token niezdefiniowany — blokuj
+    token = _get_token()
+    if not token:
+        return False
     auth = request.headers.get("Authorization", "")
     if auth.startswith("Bearer "):
-        return auth[7:] == FURGONETKA_TOKEN
-    # Furgonetka może też wysłać token jako query param
-    return request.args.get("token", "") == FURGONETKA_TOKEN
+        return auth[7:] == token
+    return request.args.get("token", "") == token
 
 
 # ── GET /api/furgonetka/orders ────────────────────────────────────
