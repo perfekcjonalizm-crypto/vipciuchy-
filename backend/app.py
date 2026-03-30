@@ -47,6 +47,7 @@ from routes.reviews   import reviews_bp
 from routes.payments  import payments_bp
 from routes.shipping      import shipping_bp
 from routes.google_auth   import google_auth_bp
+from routes.furgonetka    import furgonetka_bp
 
 # ── Aplikacja ─────────────────────────────────────────────────────
 app = Flask(__name__)
@@ -93,10 +94,24 @@ def _set_cors(headers, origin: str) -> None:
     headers["Vary"]                             = "Origin"
 
 
+import re as _re
+_LOCAL_NET_RE = _re.compile(
+    r'^https?://(localhost|127\.0\.0\.1|192\.168\.\d{1,3}\.\d{1,3}|10\.\d{1,3}\.\d{1,3}\.\d{1,3})(:\d+)?$'
+)
+
+
+def _origin_allowed(origin: str) -> bool:
+    if origin in ALLOWED_ORIGINS:
+        return True
+    if not IS_PROD and _LOCAL_NET_RE.match(origin):
+        return True  # lokalny serwer deweloperski
+    return False
+
+
 @app.after_request
 def apply_cors(response):
     origin = _cors_origin()
-    if origin in ALLOWED_ORIGINS:
+    if _origin_allowed(origin):
         _set_cors(response.headers, origin)
     return response
 
@@ -107,7 +122,7 @@ def handle_options():
         from flask import Response
         origin = _cors_origin()
         resp = Response("", 204)
-        if origin in ALLOWED_ORIGINS:
+        if _origin_allowed(origin):
             _set_cors(resp.headers, origin)
         return resp
 
@@ -137,6 +152,7 @@ app.register_blueprint(reviews_bp)
 app.register_blueprint(payments_bp)
 app.register_blueprint(shipping_bp)
 app.register_blueprint(google_auth_bp)
+app.register_blueprint(furgonetka_bp)
 
 # Surowszy rate limit na logowanie
 limiter.limit("10 per 15 minutes")(app.view_functions["auth.login"])

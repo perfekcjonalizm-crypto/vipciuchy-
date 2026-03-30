@@ -2230,6 +2230,19 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .card { break-inside:avoid; }
 }
 
+/* ── InPost Geowidget override ─────────────────────── */
+inpost-geowidget { display:block; width:100%; height:440px; border-radius:14px; overflow:hidden; }
+.geo-modal-overlay { position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px; }
+.geo-modal-box { background:#fff;border-radius:20px;width:100%;max-width:680px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.25); }
+.geo-modal-head { display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--gray-1); }
+.geo-modal-head h3 { font-family:'Syne',sans-serif;font-size:1rem;margin:0; }
+.geo-modal-close { background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--gray-4);line-height:1; }
+.geo-modal-body { flex:1;overflow:hidden;padding:0; }
+.geo-selected-point { display:flex;align-items:center;gap:10px;background:var(--teal-light,#f0fdfb);border:1.5px solid var(--teal);border-radius:12px;padding:10px 14px;margin-top:8px;cursor:pointer; }
+.geo-selected-point .geo-pt-name { font-weight:800;font-size:.9rem;color:var(--teal); }
+.geo-selected-point .geo-pt-addr { font-size:.78rem;color:var(--gray-5); }
+.geo-pick-btn { width:100%;padding:11px;background:var(--gray-1);border:1.5px dashed var(--gray-3);border-radius:12px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.85rem;font-weight:700;color:var(--gray-5);cursor:pointer;transition:all .15s;text-align:center; }
+.geo-pick-btn:hover { border-color:var(--teal);color:var(--teal);background:#f0fdfb; }
 </style>
 </head>
 <body>
@@ -3082,17 +3095,31 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
         <div id="size-btns" style="display:flex;flex-direction:column;gap:6px"></div>
       </div>
 
-      <!-- Wyszukiwanie paczkomatu / punktu Orlen -->
+      <!-- Wybór paczkomatu / punktu Orlen — Geowidget -->
       <div id="point-section" style="display:none;margin-bottom:12px">
-        <div style="font-size:.75rem;font-weight:700;color:var(--gray-5);margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em">Wybierz punkt odbioru</div>
-        <div style="display:flex;gap:8px;margin-bottom:8px">
-          <input id="point-city-input" type="text" placeholder="Wpisz miasto…"
-            style="flex:1;padding:9px 12px;border:1.5px solid var(--gray-2);border-radius:10px;font-size:.82rem;font-family:inherit;outline:none;min-width:0"
-            onkeydown="if(event.key==='Enter')searchPoints()">
-          <button type="button" class="point-search-btn" onclick="searchPoints()"
-            style="padding:9px 14px;background:var(--teal);color:#fff;border:none;border-radius:10px;font-weight:700;font-size:.82rem;cursor:pointer;font-family:inherit;white-space:nowrap">Szukaj</button>
+        <div style="font-size:.75rem;font-weight:700;color:var(--gray-5);margin-bottom:8px;text-transform:uppercase;letter-spacing:.04em">Wybierz punkt odbioru</div>
+        <button type="button" class="geo-pick-btn" id="geo-pick-btn" onclick="openGeoWidget()">📦 Wybierz paczkomat na mapie</button>
+        <div id="geo-selected-display" style="display:none" class="geo-selected-point" onclick="openGeoWidget()">
+          <span style="font-size:1.4rem">📦</span>
+          <div>
+            <div class="geo-pt-name" id="geo-pt-name">—</div>
+            <div class="geo-pt-addr" id="geo-pt-addr">—</div>
+          </div>
+          <span style="margin-left:auto;font-size:.75rem;color:var(--teal);font-weight:700">Zmień</span>
         </div>
-        <div id="points-list" style="display:none;max-height:160px;overflow-y:auto;border:1.5px solid var(--gray-2);border-radius:10px"></div>
+      </div>
+
+      <!-- Modal z mapą InPost Geowidget -->
+      <div id="geo-modal" style="display:none" class="geo-modal-overlay" onclick="if(event.target===this)closeGeoWidget()">
+        <div class="geo-modal-box">
+          <div class="geo-modal-head">
+            <h3>📦 Wybierz paczkomat</h3>
+            <button type="button" class="geo-modal-close" onclick="closeGeoWidget()">✕</button>
+          </div>
+          <div class="geo-modal-body" id="geo-modal-body">
+            <!-- widget wstrzykiwany dynamicznie -->
+          </div>
+        </div>
       </div>
 
       <!-- Adres dostawy (kurier) -->
@@ -3691,9 +3718,13 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 
 <script>
 /* ══ API ════════════════════════════════════════════════════════ */
-var API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-  ? 'http://localhost:8080'
-  : 'https://api.vipciuchy.pl';
+var API_BASE = (function() {
+  var h = window.location.hostname;
+  if (h === 'localhost' || h === '127.0.0.1') return 'http://localhost:8080';
+  // Lokalna sieć (192.168.x.x, 10.x.x.x, 172.16-31.x.x)
+  if (/^192\.168\.|^10\.|^172\.(1[6-9]|2[0-9]|3[01])\./.test(h)) return 'http://' + h + ':8080';
+  return 'https://api.vipciuchy.pl';
+})();
 var _apiOnline = false;
 var _currentUser = null;
 var _csrfToken = null;
@@ -4433,7 +4464,8 @@ function openPayM(i) {
   var sizeSection = document.getElementById('size-section'); if (sizeSection) sizeSection.style.display = 'none';
   var pointSection = document.getElementById('point-section'); if (pointSection) pointSection.style.display = 'none';
   var recipientSection = document.getElementById('recipient-section'); if (recipientSection) recipientSection.style.display = 'none';
-  var pointsList = document.getElementById('points-list'); if (pointsList) pointsList.style.display = 'none';
+  var geoDisplay = document.getElementById('geo-selected-display'); if (geoDisplay) geoDisplay.style.display = 'none';
+  var geoPickBtn = document.getElementById('geo-pick-btn'); if (geoPickBtn) geoPickBtn.style.display = '';
   var shippingSummary = document.getElementById('shipping-summary'); if (shippingSummary) shippingSummary.style.display = 'none';
   var nextBtn = document.getElementById('shipping-next-btn'); if (nextBtn) nextBtn.disabled = true;
 
@@ -6229,33 +6261,142 @@ function selectSize(el, sizeKey, price) {
   _updateShippingNextBtn();
 }
 
-function searchPoints() {
-  var city = (document.getElementById('point-city-input').value || '').trim();
-  if (!city) { showToast('Wpisz miasto.'); return; }
-  var btn = document.querySelector('.point-search-btn');
-  if (btn) { btn.textContent = '⏳'; btn.disabled = true; }
-  apiFetch('/api/shipping/points?carrier=' + encodeURIComponent(_selectedCarrier||'inpost_paczkomat') + '&city=' + encodeURIComponent(city))
-    .then(function(r){ return r.json(); })
-    .then(function(data){
-      var list = document.getElementById('points-list');
-      var points = data.points || [];
-      if (!points.length) { list.style.display = 'none'; showToast('Nie znaleziono punktów w tym mieście.'); return; }
-      list.style.display = '';
-      list.innerHTML = points.map(function(p){
-        return '<div class="point-item" onclick="selectPoint(this,\'' + p.id + '\',\'' + (p.name||'').replace(/'/g,'') + '\')">' +
-               '<div class="point-item-name">' + (p.name||'') + '</div>' +
-               '<div class="point-item-addr">' + (p.address||'') + (p.desc ? ' · ' + p.desc : '') + '</div></div>';
-      }).join('');
-    })
-    .catch(function(){ showToast('Błąd wyszukiwania.'); })
-    .finally(function(){ if(btn){ btn.textContent='Szukaj'; btn.disabled=false; } });
+/* ── InPost Geowidget ──────────────────────────────────────────── */
+var _geoWidgetReady = false;
+var _geoWidgetToken = '';
+
+function _loadGeoWidget(token) {
+  if (_geoWidgetReady) return;
+  _geoWidgetToken = token;
+  // Załaduj CSS
+  if (!document.getElementById('inpost-geo-css')) {
+    var link = document.createElement('link');
+    link.id = 'inpost-geo-css';
+    link.rel = 'stylesheet';
+    link.href = 'https://geowidget.inpost.pl/inpost-geowidget.css';
+    document.head.appendChild(link);
+  }
+  // Załaduj JS
+  if (!document.getElementById('inpost-geo-js')) {
+    var script = document.createElement('script');
+    script.id = 'inpost-geo-js';
+    script.src = 'https://geowidget.inpost.pl/inpost-geowidget.js';
+    script.defer = true;
+    document.head.appendChild(script);
+  }
+  _geoWidgetReady = true;
 }
 
-function selectPoint(el, pointId, pointName) {
+function openGeoWidget() {
+  var modal = document.getElementById('geo-modal');
+  var body  = document.getElementById('geo-modal-body');
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+
+  if (!_geoWidgetToken) {
+    // Pobierz token z backendu, potem renderuj widget
+    apiFetch('/api/shipping/geowidget-token')
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        if (d.available && d.token) {
+          _loadGeoWidget(d.token);
+          _renderGeoWidget(body, d.token);
+        } else {
+          _renderGeoWidgetFallback(body);
+        }
+      })
+      .catch(function(){ _renderGeoWidgetFallback(body); });
+  } else {
+    _renderGeoWidget(body, _geoWidgetToken);
+  }
+}
+
+function _renderGeoWidget(container, token) {
+  container.innerHTML = '';
+  var widget = document.createElement('inpost-geowidget');
+  widget.setAttribute('token', token);
+  widget.setAttribute('language', 'pl');
+  widget.setAttribute('config', 'parcelcollect');
+  widget.style.cssText = 'display:block;width:100%;height:480px;';
+  widget.addEventListener('onpoint', function(e) {
+    var point = e.detail;
+    if (!point) return;
+    var name    = point.name || '';
+    var address = point.address_details
+      ? ('ul. ' + (point.address_details.street||'') + ' ' + (point.address_details.building_number||'') + ', ' + (point.address_details.city||'')).trim()
+      : (point.address || name);
+    selectPoint(null, name, name, address);
+    closeGeoWidget();
+  });
+  container.appendChild(widget);
+}
+
+function _renderGeoWidgetFallback(container) {
+  // Gdy brak tokenu — prosty formularz wyszukiwania z API
+  container.innerHTML =
+    '<div style="padding:20px">' +
+    '<p style="font-size:.85rem;color:var(--gray-5);margin:0 0 12px">Wpisz kod pocztowy lub miasto:</p>' +
+    '<div style="display:flex;gap:8px">' +
+    '<input id="geo-fallback-input" type="text" placeholder="np. 00-001 lub Warszawa"' +
+    ' style="flex:1;padding:9px 12px;border:1.5px solid var(--gray-2);border-radius:10px;font-size:.85rem;font-family:inherit;outline:none"' +
+    ' onkeydown="if(event.key===\'Enter\')_searchGeoFallback()">' +
+    '<button type="button" onclick="_searchGeoFallback()"' +
+    ' style="padding:9px 16px;background:var(--teal);color:#fff;border:none;border-radius:10px;font-weight:700;font-size:.82rem;cursor:pointer;font-family:inherit">Szukaj</button>' +
+    '</div>' +
+    '<div id="geo-fallback-list" style="margin-top:10px;max-height:340px;overflow-y:auto"></div>' +
+    '</div>';
+}
+
+function _searchGeoFallback() {
+  var query = (document.getElementById('geo-fallback-input').value || '').trim();
+  if (!query) return;
+  var isPostCode = /^\d{2}-?\d{3}$/.test(query);
+  var paramKey   = isPostCode ? 'post_code' : 'city';
+  var paramVal   = isPostCode ? query.replace(/[^0-9]/g,'').replace(/^(\d{2})(\d{3})$/,'$1-$2') : query;
+  var list = document.getElementById('geo-fallback-list');
+  list.innerHTML = '<p style="font-size:.82rem;color:var(--gray-4);padding:8px 0">Wyszukiwanie…</p>';
+
+  apiFetch('/api/shipping/points?carrier=' + encodeURIComponent(_selectedCarrier||'inpost_paczkomat')
+           + '&' + paramKey + '=' + encodeURIComponent(paramVal))
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      var points = data.points || [];
+      if (!points.length) { list.innerHTML = '<p style="font-size:.82rem;color:var(--gray-4);padding:8px 0">Brak wyników.</p>'; return; }
+      list.innerHTML = points.map(function(p){
+        var safeId   = (p.id||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+        var safeName = (p.name||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+        var safeAddr = (p.address||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+        return '<div onclick="selectPoint(null,\'' + safeId + '\',\'' + safeName + '\',\'' + safeAddr + '\');closeGeoWidget()"' +
+               ' style="padding:10px 12px;border-bottom:1px solid var(--gray-1);cursor:pointer;transition:background .12s;border-radius:8px"' +
+               ' onmouseover="this.style.background=\'#f0fdfb\'" onmouseout="this.style.background=\'\'">' +
+               '<div style="font-weight:800;font-size:.88rem">' + esc(p.name||'') + '</div>' +
+               '<div style="font-size:.77rem;color:var(--gray-5)">' + esc(p.address||'') + (p.desc?' · '+esc(p.desc):'') + '</div></div>';
+      }).join('');
+    })
+    .catch(function(){ list.innerHTML = '<p style="font-size:.82rem;color:var(--coral);padding:8px 0">Błąd połączenia.</p>'; });
+}
+
+function closeGeoWidget() {
+  document.getElementById('geo-modal').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+function searchPoints() { openGeoWidget(); }
+
+function selectPoint(el, pointId, pointName, pointAddress) {
   _selectedPointId   = pointId;
   _selectedPointName = pointName;
-  document.querySelectorAll('.point-item').forEach(function(p){ p.classList.remove('sel'); });
-  el.classList.add('sel');
+
+  // Pokaż wybrany punkt
+  var display = document.getElementById('geo-selected-display');
+  var pickBtn  = document.getElementById('geo-pick-btn');
+  if (display) {
+    document.getElementById('geo-pt-name').textContent = pointName || pointId;
+    document.getElementById('geo-pt-addr').textContent = pointAddress || '';
+    display.style.display = 'flex';
+  }
+  if (pickBtn) pickBtn.style.display = 'none';
+
   _updateShippingNextBtn();
 }
 

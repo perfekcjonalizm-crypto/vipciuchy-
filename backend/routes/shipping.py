@@ -83,13 +83,100 @@ TRACKING_STATUS_LABELS = {
     "returned":         "Zwrócono",
 }
 
-INPOST_API_BASE = "https://api-shipx-pl.easypack24.net/v1"
-INPOST_TOKEN    = os.environ.get("INPOST_API_TOKEN", "")
-INPOST_ORG_ID   = os.environ.get("INPOST_ORG_ID", "")
+INPOST_API_BASE        = "https://api-shipx-pl.easypack24.net/v1"
+INPOST_PUBLIC_API_BASE = "https://api.inpost.pl/v1"
+INPOST_TOKEN           = os.environ.get("INPOST_API_TOKEN", "")
+INPOST_ORG_ID          = os.environ.get("INPOST_ORG_ID", "")
+INPOST_GEOWIDGET_TOKEN = os.environ.get("INPOST_GEOWIDGET_TOKEN", "")
+
+
+NOMINATIM_URL = "https://nominatim.openstreetmap.org/search"
+OVERPASS_URL  = "https://overpass.openstreetmap.fr/api/interpreter"
+OSM_HEADERS   = {"User-Agent": "VipCiuchy/1.0 (vipciuchy.pl)"}
+
+
+def _inpost_points_from_osm(city: str, post_code: str) -> list:
+    """Zwraca paczkomaty InPost z OpenStreetMap w promieniu 5 km od szukanej lokalizacji."""
+    query = post_code or city
+    if not query:
+        return []
+
+    # Krok 1: geokodowanie — Nominatim (darmowe, bez klucza)
+    try:
+        geo = requests.get(
+            NOMINATIM_URL,
+            params={"q": query, "countrycodes": "pl", "format": "json", "limit": 1},
+            headers=OSM_HEADERS, timeout=6
+        ).json()
+        if not geo:
+            log.warning(f"Nominatim: brak wyników dla '{query}'")
+            return []
+        lat, lon = float(geo[0]["lat"]), float(geo[0]["lon"])
+    except Exception as e:
+        log.warning(f"Nominatim error: {e}")
+        return []
+
+    # Krok 2: Overpass — paczkomaty InPost w promieniu 5 km
+    overpass_query = (
+        f'[out:json][timeout:10];'
+        f'node["amenity"="parcel_locker"]["operator"="InPost"](around:5000,{lat},{lon});'
+        f'out 25;'
+    )
+    try:
+        resp = requests.post(
+            OVERPASS_URL,
+            data={"data": overpass_query},
+            headers=OSM_HEADERS, timeout=18
+        )
+        if not resp.ok:
+            log.warning(f"Overpass HTTP {resp.status_code}")
+            return []
+        elements = resp.json().get("elements", [])
+    except Exception as e:
+        log.warning(f"Overpass error: {e}")
+        return []
+
+    points = []
+    for el in elements:
+        tags = el.get("tags", {})
+        ref  = tags.get("ref", "")
+        if not ref:
+            continue
+        # Adres z tagów OSM lub z URL
+        addr_street = tags.get("addr:street", "")
+        addr_no     = tags.get("addr:housenumber", "")
+        addr_city   = tags.get("addr:city", city or "")
+        if addr_street:
+            address = f"ul. {addr_street} {addr_no}, {addr_city}".strip(", ")
+        else:
+            # Wydobądź miasto z URL InPost jeśli brak tagów adresowych
+            website = tags.get("website", "")
+            address = addr_city or ""
+            if website:
+                # URL: /paczkomat-{city}-{ref}-{street}-...
+                parts = website.rstrip("/").split("/paczkomat-")
+                if len(parts) > 1:
+                    city_slug = parts[1].split("-")[0].capitalize()
+                    address = city_slug if not address else f"{address}"
+
+        points.append({
+            "id":     ref,
+            "name":   ref,
+            "address": address,
+            "desc":   tags.get("description", tags.get("opening_hours", "")),
+            "status": "Operating",
+        })
+    return points
 
 
 def _inpost_headers():
     return {"Authorization": f"Bearer {INPOST_TOKEN}", "Content-Type": "application/json"}
+
+
+# ── Endpoint: geowidget token (bezpieczne przekazanie do frontu) ─
+@shipping_bp.get("/geowidget-token")
+def geowidget_token():
+    return jsonify({"token": INPOST_GEOWIDGET_TOKEN, "available": bool(INPOST_GEOWIDGET_TOKEN)})
 
 
 # ── Endpoint: pobierz opcje dostawy ─────────────────────────────
@@ -111,18 +198,21 @@ def get_options():
 # ── Endpoint: punkty InPost/Orlen w pobliżu ─────────────────────
 @shipping_bp.get("/points")
 def get_points():
-    carrier = request.args.get("carrier", "inpost_paczkomat")
-    city    = (request.args.get("city", "") or "").strip()
-    if not city:
-        return jsonify({"error": "Podaj miasto."}), 400
+    carrier   = request.args.get("carrier", "inpost_paczkomat")
+    city      = (request.args.get("city", "") or "").strip()
+    post_code = (request.args.get("post_code", "") or "").strip()
+
+    if not city and not post_code:
+        return jsonify({"error": "Podaj miasto lub kod pocztowy."}), 400
 
     if carrier == "inpost_paczkomat":
+        # 1. Próba ShipX API (wymaga tokenu — dla kont biznesowych)
         if INPOST_TOKEN:
             try:
                 resp = requests.get(
                     f"{INPOST_API_BASE}/points",
-                    params={"type": "paczkomat", "near_place": city, "per_page": 20,
-                            "fields": "name,address,location_description,status"},
+                    params={"type": "paczkomat", "near_place": city or post_code,
+                            "per_page": 20, "fields": "name,address,location_description,status"},
                     headers=_inpost_headers(), timeout=5
                 )
                 if resp.ok:
@@ -137,23 +227,28 @@ def get_points():
                         }
                         for p in data.get("items", [])
                     ]
-                    return jsonify({"points": points})
+                    return jsonify({"points": points, "source": "shipx"})
             except Exception as e:
-                log.warning(f"InPost points API error: {e}")
-        # Dev mode fallback — mock points
-        mock = [
-            {"id": f"{city.upper()}-001", "name": f"{city.upper()}-001", "address": f"ul. Przykładowa 1, {city}", "desc": "Przy wejściu do centrum handlowego", "status": "Operating"},
-            {"id": f"{city.upper()}-002", "name": f"{city.upper()}-002", "address": f"ul. Testowa 5, {city}",     "desc": "Obok Biedronki",                  "status": "Operating"},
-            {"id": f"{city.upper()}-003", "name": f"{city.upper()}-003", "address": f"al. Główna 12, {city}",    "desc": "Przy stacji benzynowej",          "status": "Operating"},
-        ]
-        return jsonify({"points": mock})
+                log.warning(f"InPost ShipX API error: {e}")
+
+        # 2. OpenStreetMap (darmowe, bez klucza) — Nominatim + Overpass
+        points = _inpost_points_from_osm(city, post_code)
+        if points:
+            return jsonify({"points": points, "source": "osm"})
+
+        # 3. Ostateczny fallback — komunikat błędu
+        return jsonify({"error": "Nie udało się pobrać listy paczkomatów. Spróbuj ponownie."}), 503
 
     if carrier == "orlen":
+        # Orlen nie ma publicznego API — mock
+        label = post_code or city
         mock = [
-            {"id": f"ORLEN-{city.upper()}-01", "name": f"Orlen {city} 1", "address": f"ul. Naftowa 1, {city}", "desc": "Stacja całodobowa", "status": "Operating"},
-            {"id": f"ORLEN-{city.upper()}-02", "name": f"Orlen {city} 2", "address": f"ul. Benzynowa 3, {city}", "desc": "", "status": "Operating"},
+            {"id": f"ORLEN-{label.upper()}-01", "name": f"Orlen {label} 1",
+             "address": f"ul. Naftowa 1, {city or label}", "desc": "Stacja całodobowa", "status": "Operating"},
+            {"id": f"ORLEN-{label.upper()}-02", "name": f"Orlen {label} 2",
+             "address": f"ul. Benzynowa 3, {city or label}", "desc": "", "status": "Operating"},
         ]
-        return jsonify({"points": mock})
+        return jsonify({"points": mock, "source": "mock"})
 
     return jsonify({"points": []})
 
