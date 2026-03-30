@@ -94,12 +94,26 @@ NOMINATIM_URL = "https://nominatim.openstreetmap.org/search"
 OVERPASS_URL  = "https://overpass.openstreetmap.fr/api/interpreter"
 OSM_HEADERS   = {"User-Agent": "VipCiuchy/1.0 (vipciuchy.pl)"}
 
+# Cache wyników Overpass — klucz: (post_code|city), wartość: (timestamp, points)
+import time as _time
+_osm_cache: dict = {}
+_OSM_CACHE_TTL = 86400  # 24 godziny
+
 
 def _inpost_points_from_osm(city: str, post_code: str) -> list:
-    """Zwraca paczkomaty InPost z OpenStreetMap w promieniu 5 km od szukanej lokalizacji."""
+    """Zwraca paczkomaty InPost z OpenStreetMap w promieniu 5 km od szukanej lokalizacji.
+    Wyniki są cache'owane przez 24 h — Overpass API jest wolne."""
     query = post_code or city
     if not query:
         return []
+
+    # Sprawdź cache
+    cache_key = query.lower().strip()
+    if cache_key in _osm_cache:
+        ts, cached_points = _osm_cache[cache_key]
+        if _time.time() - ts < _OSM_CACHE_TTL:
+            log.debug(f"OSM cache hit dla '{cache_key}'")
+            return cached_points
 
     # Krok 1: geokodowanie — Nominatim (darmowe, bez klucza)
     try:
@@ -142,30 +156,30 @@ def _inpost_points_from_osm(city: str, post_code: str) -> list:
         ref  = tags.get("ref", "")
         if not ref:
             continue
-        # Adres z tagów OSM lub z URL
         addr_street = tags.get("addr:street", "")
         addr_no     = tags.get("addr:housenumber", "")
         addr_city   = tags.get("addr:city", city or "")
         if addr_street:
             address = f"ul. {addr_street} {addr_no}, {addr_city}".strip(", ")
         else:
-            # Wydobądź miasto z URL InPost jeśli brak tagów adresowych
             website = tags.get("website", "")
             address = addr_city or ""
             if website:
-                # URL: /paczkomat-{city}-{ref}-{street}-...
                 parts = website.rstrip("/").split("/paczkomat-")
                 if len(parts) > 1:
                     city_slug = parts[1].split("-")[0].capitalize()
-                    address = city_slug if not address else f"{address}"
+                    address = city_slug if not address else address
 
         points.append({
-            "id":     ref,
-            "name":   ref,
+            "id":      ref,
+            "name":    ref,
             "address": address,
-            "desc":   tags.get("description", tags.get("opening_hours", "")),
-            "status": "Operating",
+            "desc":    tags.get("description", tags.get("opening_hours", "")),
+            "status":  "Operating",
         })
+
+    # Zapisz do cache
+    _osm_cache[cache_key] = (_time.time(), points)
     return points
 
 

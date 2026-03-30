@@ -130,12 +130,18 @@ def handle_options():
 limiter = Limiter(
     get_remote_address,
     app=app,
-    default_limits=["200 per minute"],
+    # Produkcja: 600/min dla GET (10 req/s), 120/min dla POST
+    default_limits=["600 per minute"],
     storage_uri="memory://",
 )
 
-# Ostrzejsze limity na auth i kontakt
-limiter.limit("10 per minute")(auth_bp)
+# Endpointy tylko do odczytu — wyższy limit
+limiter.limit("600 per minute")(products_bp)
+limiter.limit("600 per minute")(shipping_bp)
+limiter.limit("600 per minute")(favorites_bp)
+
+# Auth — zabezpieczenie przed brute-force
+limiter.limit("30 per minute")(auth_bp)
 limiter.limit("5 per minute")(contact_bp)
 
 # ── Blueprinty ────────────────────────────────────────────────────
@@ -154,8 +160,8 @@ app.register_blueprint(shipping_bp)
 app.register_blueprint(google_auth_bp)
 app.register_blueprint(furgonetka_bp)
 
-# Surowszy rate limit na logowanie
-limiter.limit("10 per 15 minutes")(app.view_functions["auth.login"])
+# Login: 20 prób / 15 minut per IP
+limiter.limit("20 per 15 minutes")(app.view_functions["auth.login"])
 
 # ── Frontend HTML ─────────────────────────────────────────────────
 HTML_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "wymien-i-kup.html")
