@@ -18,7 +18,12 @@ log = logging.getLogger(__name__)
 
 def _get_token():
     """Czyta token dynamicznie — Railway może ładować env po starcie."""
-    return os.environ.get("FURGONETKA_WEBHOOK_TOKEN", "")
+    # Szuka też z ewentualną spacją (błąd wprowadzania w Railway)
+    for key in ["FURGONETKA_WEBHOOK_TOKEN", "FURGONETKA_WEBHOOK_TOKEN "]:
+        val = os.environ.get(key, "").strip()
+        if val:
+            return val
+    return ""
 
 
 # ── Debug endpoint (usuń po weryfikacji) ─────────────────────────
