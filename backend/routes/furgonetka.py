@@ -26,7 +26,7 @@ def _get_token():
     return ""
 
 
-# ── Debug endpoint (usuń po weryfikacji) ─────────────────────────
+# ── Debug endpoints (usuń po weryfikacji) ────────────────────────
 @furgonetka_bp.get("/health")
 def health():
     token = _get_token()
@@ -34,6 +34,17 @@ def health():
         "token_set": bool(token),
         "token_len": len(token),
         "env_keys":  [k for k in os.environ if "FURG" in k.upper()],
+    })
+
+
+@furgonetka_bp.route("/debug-orders", methods=["GET", "POST"])
+def debug_orders():
+    """Zwraca wszystkie nagłówki i parametry — do zrozumienia jak Furgonetka wysyła token."""
+    return jsonify({
+        "method":  request.method,
+        "headers": dict(request.headers),
+        "args":    dict(request.args),
+        "json":    request.get_json(silent=True),
     })
 
 
