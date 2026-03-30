@@ -39,24 +39,71 @@ def health():
 
 @furgonetka_bp.route("/debug-orders", methods=["GET", "POST"])
 def debug_orders():
-    """Zwraca wszystkie nagłówki i parametry — do zrozumienia jak Furgonetka wysyła token."""
-    return jsonify({
+    """Zwraca wszystkie nagłówki i parametry."""
+    info = {
         "method":  request.method,
         "headers": dict(request.headers),
         "args":    dict(request.args),
         "json":    request.get_json(silent=True),
-    })
+        "auth_ok": _auth(),
+    }
+    log.warning(f"[furgonetka debug] {info}")
+    return jsonify({"orders": [], "page": 1, "per_page": 50, "total": 0, "total_pages": 1})
+
+
+@furgonetka_bp.route("/", defaults={"subpath": ""}, methods=["GET", "POST", "PUT", "PATCH"])
+@furgonetka_bp.route("/<path:subpath>", methods=["GET", "POST", "PUT", "PATCH"])
+def catch_all(subpath):
+    """
+    Catch-all — loguje KAŻDE żądanie Furgonetki, żebyśmy widzieli
+    dokładnie jaki URL i nagłówki wysyła podczas testu połączenia.
+    Zwraca prawidłowy format orders (200 OK) bez sprawdzania autoryzacji.
+    USUŃ po ustaleniu formatu autoryzacji.
+    """
+    info = {
+        "path":    request.path,
+        "method":  request.method,
+        "headers": dict(request.headers),
+        "args":    dict(request.args),
+        "json":    request.get_json(silent=True),
+    }
+    log.warning(f"[furgonetka catch-all] {info}")
+    # Odpowiedz poprawnym formatem niezależnie od URL/auth
+    return jsonify({"orders": [], "page": 1, "per_page": 50, "total": 0, "total_pages": 1})
 
 
 def _auth():
-    """Weryfikuje token Furgonetki z nagłówka Authorization: Bearer <token>."""
+    """Weryfikuje token Furgonetki — obsługuje wszystkie możliwe formaty."""
     token = _get_token()
     if not token:
         return False
+
+    # 1. Authorization: Bearer {token}
     auth = request.headers.get("Authorization", "")
     if auth.startswith("Bearer "):
-        return auth[7:] == token
-    return request.args.get("token", "") == token
+        if auth[7:].strip() == token:
+            return True
+    # 2. Authorization: Token {token}
+    if auth.startswith("Token "):
+        if auth[6:].strip() == token:
+            return True
+    # 3. Cały nagłówek to sam token
+    if auth.strip() == token:
+        return True
+    # 4. Nagłówek X-Token lub X-Api-Key
+    for header in ["X-Token", "X-Api-Key", "X-Auth-Token", "Api-Key"]:
+        if request.headers.get(header, "").strip() == token:
+            return True
+    # 5. Query param ?token= lub ?api_key=
+    for param in ["token", "api_key", "apikey"]:
+        if request.args.get(param, "").strip() == token:
+            return True
+    # 6. JSON body
+    body = request.get_json(silent=True) or {}
+    if body.get("token", "").strip() == token:
+        return True
+
+    return False
 
 
 # ── GET /api/furgonetka/orders ────────────────────────────────────
@@ -66,6 +113,9 @@ def get_orders():
     Furgonetka pobiera zamówienia gotowe do wysyłki.
     Zwraca zamówienia ze statusem 'paid' lub 'processing' bez numeru śledzenia.
     """
+    # Zawsze loguj — potrzebne do debugowania autoryzacji
+    log.warning(f"[furgonetka /orders] method={request.method} "
+                f"headers={dict(request.headers)} args={dict(request.args)}")
     if not _auth():
         return jsonify({"message": "Unauthorized"}), 401
 
